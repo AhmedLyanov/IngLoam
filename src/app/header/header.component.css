@@ -1,0 +1,127 @@
+
+
+header {
+    background-color: var(--bg-white);
+    border-bottom: 1px solid var(--gray-border);
+    padding: 8px 32px;
+    font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.content_center_header {
+    max-width: 1700px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+
+
+.logotype_IngLoam {
+    display: flex;
+    align-items: center;
+}
+.logotype_IngLoam {
+    display: flex;
+    align-items: center;
+    gap: 8px; 
+}
+
+.logotype-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 1px;  
+    text-transform: uppercase;  
+    font-family: "Inter", "Segoe UI", sans-serif;
+    filter: contrast(1.2);
+}
+
+.IngLoam_corporation img {
+    height: 42px;
+    width: auto;
+    filter: brightness(1.1) contrast(1.2);
+    transition: transform 0.2s ease;
+}
+
+.IngLoam_corporation img:hover {
+    transform: scale(1.05);
+}
+
+
+
+.search_form_module form {
+    display: flex;
+    position: relative;
+}
+
+.search_form_module form svg {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    fill: var(--text-muted);
+    width: 18px;
+    height: 18px;
+}
+
+.search_form_module input[type="text"] {
+    width: 500px;
+    padding: 10px 16px 10px 40px;
+    border: 1px solid var(--gray-border);
+    border-radius: 10px;
+    background-color: transparent;
+    color: var(--text-main);
+    font-size: 15px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search_form_module input[type="text"]::placeholder {
+    color: var(--text-muted);
+}
+
+.search_form_module input[type="text"]:focus {
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), inset 0 0 3px rgba(255, 255, 255, 0.2);
+    outline: none;
+}
+
+
+
+.sign_or_reg_panel {
+    display: flex;
+    gap: 12px;
+}
+
+.sign_or_reg_panel a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    padding: 9px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-main);
+    background-color: var(--bg-light);
+    border: 1px solid var(--gray-border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.sign_or_reg_panel a:hover {
+    background-color: var(--hover-gray);
+}
+
+.sign_or_reg_panel svg {
+    fill: var(--text-main);
+    width: 18px;
+    height: 18px;
+}

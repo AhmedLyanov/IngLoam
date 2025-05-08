@@ -3,13 +3,9 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-vite-project": {
+    "my-angular-project": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
-      },
+      "schematics": {},
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -17,14 +13,13 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/angular-vite-project",
+            "outputPath": "dist/my-angular-project",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
@@ -32,7 +27,7 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ],
             "scripts": []
           },
@@ -64,10 +59,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "angular-vite-project:build:production"
+              "buildTarget": "my-angular-project:build:production"
             },
             "development": {
-              "buildTarget": "angular-vite-project:build:development"
+              "buildTarget": "my-angular-project:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +78,6 @@
               "zone.js/testing"
             ],
             "tsConfig": "tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
@@ -91,7 +85,7 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ],
             "scripts": []
           }
@@ -100,6 +94,6 @@
     }
   },
   "cli": {
-    "analytics": "baf22983-74b1-4e23-8cff-b513405d1c2a"
+    "analytics": "893606ee-c77c-4335-9bcb-f7f356f3c4c4"
   }
 }
