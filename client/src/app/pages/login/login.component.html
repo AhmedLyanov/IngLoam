@@ -1,0 +1,45 @@
+<div class="layout">
+  <main class="main-content">
+    <div class="login-container">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" fill="currentColor"/>
+        </svg>
+      </div>
+
+      <h1>Вход в аккаунт</h1>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-group">
+          <label for="username">Имя пользователя *</label>
+          <input type="text" id="username" formControlName="username" [class.invalid]="isFieldInvalid('username')">
+          <div class="error-message" *ngIf="isFieldInvalid('username')">{{ getUsernameErrorMessage() }}</div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Пароль *</label>
+          <input type="password" id="password" formControlName="password" [class.invalid]="isFieldInvalid('password')">
+          <div class="error-message" *ngIf="isFieldInvalid('password')">Пароль обязателен</div>
+        </div>
+
+        <div class="form-footer">
+          <div class="remember-me">
+            <input type="checkbox" id="remember" formControlName="rememberMe">
+            <label for="remember">Запомнить меня</label>
+          </div>
+          <a routerLink="/forgot-password" class="forgot-password">Забыли пароль?</a>
+        </div>
+
+        <button type="submit" class="submit-btn" [disabled]="loginForm.invalid || isLoading">
+          {{ isLoading ? 'Вход...' : 'Войти' }}
+        </button>
+
+        <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+        <div class="register-link">
+          Нет аккаунта? <a routerLink="/register">Зарегистрироваться</a>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
