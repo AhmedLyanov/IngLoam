@@ -5,7 +5,7 @@
 }
 
 .sidebar {
-  width: 260px;
+  width: 340px;
   background-color: var(--bg-darker);
   padding: 24px 0;
   height: 100vh;
@@ -101,7 +101,7 @@
   gap: 24px;
 }
 
-/* --- УЛУЧШЕННАЯ КАРТОЧКА ПОСТА --- */
+
 .post-card {
   display: flex;
   flex-direction: column;

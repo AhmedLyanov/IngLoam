@@ -1,20 +1,32 @@
 <div class="profile-layout">
   <aside class="profile-sidebar">
-    <div class="profile-avatar">
-      <img src="https://avatars.githubusercontent.com/u/583231?v=4" alt="avatar" />
+    <div
+      class="profile-avatar"
+      (click)="fileInput.click()"
+      style="cursor: pointer"
+    >
+      <img
+        [src]="avatarUrl || 'https://avatars.githubusercontent.com/u/583231?v=4'"
+        alt="avatar"
+        title="Кликните, чтобы изменить аватар"
+      />
     </div>
+    <input
+      #fileInput
+      type="file"
+      accept="image/*"
+      style="display: none"
+      (change)="onFileSelected($event)"
+    />
     <h3>{{ name }} {{ surname }}</h3>
     <p class="username">{{ username }}</p>
     <div class="profile-actions">
       <button class="action-btn">Редактировать</button>
       <button class="action-btn">Настройки</button>
-      <button (click)="logout()" class="action-btn">Выйти</button>
+      <button class="action-btn" (click)="logout()">Выйти</button>
     </div>
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
   </aside>
 
-  <section class="profile-main-card">
-    
-
-
-  </section>
+  <section class="profile-main-card"></section>
 </div>

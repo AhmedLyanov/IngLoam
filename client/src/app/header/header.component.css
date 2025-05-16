@@ -1,14 +1,20 @@
-
 .site-header {
-  background-color: rgba(13, 17, 23, 0.9);
-  border-bottom: 1px solid #30363d;
+  background-color: rgba(13, 17, 23, 0.95);
+  border-bottom: 1px solid rgba(48, 54, 61, 0.5);
   padding: 0 32px;
   position: sticky;
   top: 0;
   z-index: 100;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter:  blur(8px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: #ffffff;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.site-header:hover {
+  background-color: rgba(13, 17, 23, 0.98);
+  border-bottom-color: rgba(48, 54, 61, 0.8);
 }
 
 .content_center_header {
@@ -17,80 +23,114 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: 72px;
 }
-
-
-
 
 .logo-image {
-  height: 50px;
-}
+  height: 55px;
 
+}
 
 .search_form_module {
   flex-grow: 1;
-  margin: 0 20px;
+  margin: 0 32px;
+  max-width: 600px;
 }
+
 .search-form {
   position: relative;
 }
+
 .search-input {
-  padding: 8px 8px 8px 32px;
+  padding: 10px 12px 10px 40px;
   width: 100%;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #30363d;
-  background-color: #0d1117;
+  background-color: rgba(13, 17, 23, 0.7);
   color: #ffffff;
-}
-.search-icon {
-  position: absolute;
-  left: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  fill: #c9d1d9;
-  pointer-events: none;
+  font-size: 15px;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+.search-input:focus {
+  outline: none;
+  border-color: #58a6ff;
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+  background-color: rgba(13, 17, 23, 0.9);
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  fill: #8b949e;
+  pointer-events: none;
+  transition: fill 0.2s ease;
+}
+
+.search-input:focus + .search-icon {
+  fill: #58a6ff;
+}
 
 .sign_or_reg_panel {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
 }
 
 .auth-link {
   color: #58a6ff;
   text-decoration: none;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
   border: 1px solid transparent;
   transition: all 0.2s ease;
-}
-.auth-link:hover {
-  background-color: rgba(56, 139, 253, 0.1);
-  border-color: #58a6ff;
+  font-size: 15px;
+  font-weight: 500;
 }
 
+.auth-link:hover {
+  background-color: rgba(56, 139, 253, 0.15);
+  border-color: rgba(88, 166, 255, 0.4);
+}
+
+.auth-link.register {
+  background-color: rgba(46, 160, 67, 0.1);
+  color: #3fb950;
+  border-color: rgba(63, 185, 80, 0.4);
+}
+
+.auth-link.register:hover {
+  background-color: rgba(46, 160, 67, 0.2);
+}
 
 .login_information {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
 }
 
 .username-display {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
+  color: #e6edf3;
 }
-
 
 .avatar-image,
 .user-avatar-box img {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.avatar-image:hover {
+  border-color: rgba(88, 166, 255, 0.5);
+  transform: scale(1.05);
 }
 
 .avatar-dropdown {
@@ -100,62 +140,137 @@
 
 .dropdown-menu {
   position: absolute;
-  top: 40px;
+  top: 48px;
   right: 0;
   background-color: #161b22;
   border: 1px solid #30363d;
-  border-radius: 6px;
-  min-width: 150px;
+  border-radius: 8px;
+  min-width: 180px;
   z-index: 10;
-  padding: 4px 0;
+  padding: 6px 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(-10px);
+  visibility: hidden;
+  transition: all 0.2s ease;
 }
+
+.avatar-dropdown:hover .dropdown-menu {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
 .dropdown-menu li {
   list-style: none;
 }
+
 .dropdown-menu button {
   background: none;
   border: none;
-  color: #c9d1d9;
+  color: #e6edf3;
   text-align: left;
   width: 100%;
   padding: 8px 16px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  font-size: 14px;
+  transition: all 0.15s ease;
 }
+
 .dropdown-menu button:hover {
   background-color: #21262d;
+  color: #58a6ff;
+}
+
+.dropdown-menu button svg {
+  flex-shrink: 0;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 16px;
 }
 
 .nav-buttons a {
   color: #c9d1d9;
   text-decoration: none;
-  margin: 0 8px;
-  font-size: 14px;
-}
-.nav-buttons a:hover {
-  text-decoration: underline;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 8px 0;
+  position: relative;
+  transition: color 0.2s ease;
 }
 
+.nav-buttons a:hover {
+  color: #58a6ff;
+}
+
+.nav-buttons a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #58a6ff;
+  transition: width 0.3s ease;
+}
+
+.nav-buttons a:hover::after {
+  width: 100%;
+}
+
+.notifications_user_box {
+  cursor: pointer;
+  position: relative;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.notifications_user_box:hover {
+  background-color: rgba(177, 186, 196, 0.1);
+}
+
+.notification-icon {
+  fill: #c9d1d9;
+  transition: fill 0.2s ease;
+}
+
+.notifications_user_box:hover .notification-icon {
+  fill: #58a6ff;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-color: #f85149;
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .logout-button {
   background-color: transparent;
   border: 1px solid #30363d;
   color: #f85149;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
+
 .logout-button:hover {
-  background-color: rgba(248, 81, 73, 0.1);
-  border-color: #f85149;
-}
-
-
-.notifications_user_box {
-  cursor: pointer;
-}
-.notification-icon {
-  fill: #c9d1d9;
+  background-color: rgba(248, 81, 73, 0.15);
+  border-color: rgba(248, 81, 73, 0.4);
 }

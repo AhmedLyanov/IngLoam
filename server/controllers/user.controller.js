@@ -63,15 +63,17 @@ exports.login = async (req, res) => {
 };
 
 
-exports.setPost = async (req, res) => {
+exports.uploadAvatar = async (req, res) => {
   try {
-    const { title, description } = req.body;
-    
-    res.status(200).json({message:"Вход совершен", token})
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: "Ошибка сервера" });
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ error: 'Пользователь не найден' });
+
+    user.avatar = `http://localhost:3000/uploads/${req.file.filename}`;
+    await user.save();
+
+    res.json({ message: 'Аватарка загружена', avatar: user.avatar });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Ошибка загрузки аватара' });
   }
 };
-
-
