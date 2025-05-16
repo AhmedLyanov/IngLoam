@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { CommonModule, NgIf } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { ApiService } from '../../service/service.service';
@@ -7,14 +12,9 @@ import { ApiService } from '../../service/service.service';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    CommonModule,
-    NgIf,
-    RouterLink
-  ],
+  imports: [ReactiveFormsModule, CommonModule, NgIf, RouterLink],
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
   registrationForm: FormGroup;
@@ -30,13 +30,16 @@ export class RegisterComponent {
       name: ['', [Validators.required, Validators.minLength(2)]],
       surname: ['', [Validators.required, Validators.minLength(2)]],
       username: ['', [Validators.required, Validators.minLength(4)]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      email: ['', [Validators.required, Validators.email]],
     });
   }
 
   isFieldInvalid(field: string): boolean {
     const control = this.registrationForm.get(field);
-    return control ? control.invalid && (control.dirty || control.touched) : false;
+    return control
+      ? control.invalid && (control.dirty || control.touched)
+      : false;
   }
 
   onSubmit() {
@@ -64,7 +67,7 @@ export class RegisterComponent {
         } else {
           this.errorMessage = error.error?.message || 'Ошибка при регистрации';
         }
-      }
+      },
     });
   }
 }

@@ -1,162 +1,161 @@
+
 .site-header {
-    background-color: var(--bg-darker);
-    border-bottom: 1px solid var(--gray-border);
-    padding: 0 32px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    background-color: rgba(13, 17, 23, 0.8);
+  background-color: rgba(13, 17, 23, 0.9);
+  border-bottom: 1px solid #30363d;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter:  blur(8px);
+  color: #ffffff;
 }
 
 .content_center_header {
-    max-width: 1700px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    height: 64px;
-}
-
-.logotype_IngLoam {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.logotype-text {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text-main);
-    letter-spacing: 0.5px;
-    font-family: "SF Pro Display", -apple-system, sans-serif;
-}
-
-.IngLoam_corporation img {
-    height: 55px;
-    width: auto;
-    transition: transform var(--transition-normal);
+  max-width: 1700px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
 }
 
 
 
 
-.search_form_module form {
-    display: flex;
-    position: relative;
-    flex: 1;
-    max-width: 800px;
-    min-width: 600px;
+.logo-image {
+  height: 50px;
 }
 
-.search_form_module input[type="text"] {
-    width: 100%;
-    padding: 10px 16px 10px 42px;
-    background-color: var(--bg-light);
-    border: 1px solid var(--gray-border);
-    border-radius: var(--radius-md);
-    color: var(--text-main);
-    font-size: 15px;
-    transition: all var(--transition-normal);
-    height: 42px;
-}
-.search_form_module svg {
-    position: absolute;
-    top: 50%;
-    left: 12px;
-    transform: translateY(-50%);
-    fill: var(--text-muted);
-    width: 16px;
-    height: 16px;
-    pointer-events: none;
-}
 
+.search_form_module {
+  flex-grow: 1;
+  margin: 0 20px;
+}
+.search-form {
+  position: relative;
+}
 .search-input {
-    width: 100%;
-    padding: 8px 12px 8px 36px;
-    background-color: var(--bg-light);
-    border: 1px solid var(--gray-border);
-    border-radius: var(--radius-md);
-    color: var(--text-main);
-    font-size: 14px;
-    transition: all var(--transition-normal);
+  padding: 8px 8px 8px 32px;
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #30363d;
+  background-color: #0d1117;
+  color: #ffffff;
+}
+.search-icon {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  fill: #c9d1d9;
+  pointer-events: none;
 }
 
-.search-input::placeholder {
-    color: var(--text-muted);
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
-    background-color: var(--bg-darker);
-}
 
 .sign_or_reg_panel {
-    display: flex;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .auth-link {
-    display: inline-flex;
-    align-items: center;
-    padding: 8px 16px;
-    border-radius: var(--radius-md);
-    font-size: 14px;
-    font-weight: 500;
-    transition: all var(--transition-normal);
+  color: #58a6ff;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
 }
-
-.sign-in {
-    color: var(--text-main);
-    background-color: transparent;
-    border: 1px solid var(--gray-border);
-}
-
-.sign-in:hover {
-    background-color: var(--hover-gray);
-    text-decoration: none;
-    border-color: var(--text-muted);
-}
-
-.register {
-    color: var(--bg-darker);
-    background-color: var(--accent-color);
-    border: 1px solid var(--accent-color);
-}
-
-.register:hover {
-    background-color: var(--accent-hover);
-    border-color: var(--accent-hover);
-    text-decoration: none;
-}
-
-.auth-link svg {
-    fill: currentColor;
-    width: 16px;
-    height: 16px;
-    margin-right: 6px;
+.auth-link:hover {
+  background-color: rgba(56, 139, 253, 0.1);
+  border-color: #58a6ff;
 }
 
 
-.login_information{
+.login_information {
   display: flex;
   align-items: center;
+  gap: 16px;
 }
 
-.notifications_user_box{
-  padding: 6px;
-  background-color: var(--gray-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
-  transition: all 0.5s;
+.username-display {
+  font-weight: 600;
+  font-size: 14px;
 }
-.notifications_user_box:hover{
-  background-color: rgb(41, 40, 40);
+
+
+.avatar-image,
+.user-avatar-box img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   cursor: pointer;
+}
+
+.avatar-dropdown {
+  position: relative;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  min-width: 150px;
+  z-index: 10;
+  padding: 4px 0;
+}
+.dropdown-menu li {
+  list-style: none;
+}
+.dropdown-menu button {
+  background: none;
+  border: none;
+  color: #c9d1d9;
+  text-align: left;
+  width: 100%;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dropdown-menu button:hover {
+  background-color: #21262d;
+}
+
+.nav-buttons a {
+  color: #c9d1d9;
+  text-decoration: none;
+  margin: 0 8px;
+  font-size: 14px;
+}
+.nav-buttons a:hover {
+  text-decoration: underline;
+}
+
+
+.logout-button {
+  background-color: transparent;
+  border: 1px solid #30363d;
+  color: #f85149;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.logout-button:hover {
+  background-color: rgba(248, 81, 73, 0.1);
+  border-color: #f85149;
+}
+
+
+.notifications_user_box {
+  cursor: pointer;
+}
+.notification-icon {
+  fill: #c9d1d9;
 }

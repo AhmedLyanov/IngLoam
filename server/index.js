@@ -12,7 +12,6 @@ app.use(express.json());
 app.get('/', (req, res) => res.json({ message: 'Успешное подключение' }));
 app.post("/register", userController.register);
 app.post("/login", userController.login); 
-app.get("/users", userController.getAllUsers);
 app.get("/profile", authenticate, async  (req, res) => {
   const profile = await User.findById( req.userId)
   res.json({ message: "Доступ разрешён!", profile, });

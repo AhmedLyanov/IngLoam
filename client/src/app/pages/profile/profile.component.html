@@ -1,7 +1,20 @@
-<div>
-  <h2>Добро пожаловать!</h2>
-  <p>Имя: {{ name }}</p>
-  <p>Фамилия: {{ surname }}</p>
-  <p>Логин: {{username}}</p>
+<div class="profile-layout">
+  <aside class="profile-sidebar">
+    <div class="profile-avatar">
+      <img src="https://avatars.githubusercontent.com/u/583231?v=4" alt="avatar" />
+    </div>
+    <h3>{{ name }} {{ surname }}</h3>
+    <p class="username">{{ username }}</p>
+    <div class="profile-actions">
+      <button class="action-btn">Редактировать</button>
+      <button class="action-btn">Настройки</button>
+      <button (click)="logout()" class="action-btn">Выйти</button>
+    </div>
+  </aside>
 
+  <section class="profile-main-card">
+    
+
+
+  </section>
 </div>

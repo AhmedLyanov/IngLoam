@@ -19,7 +19,9 @@ export class ProfileComponent implements OnInit {
 
   constructor(private apiService: ApiService, private router: Router) {}
 
-
+ logout() {
+    this.apiService.logout();
+  }
   ngOnInit(): void {
     if(!localStorage.getItem("token")){
       this.router.navigate(['/login']);

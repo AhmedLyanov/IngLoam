@@ -97,55 +97,101 @@
 
 .posts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
   gap: 24px;
 }
 
+/* --- УЛУЧШЕННАЯ КАРТОЧКА ПОСТА --- */
 .post-card {
+  display: flex;
+  flex-direction: column;
   background-color: var(--bg-light);
   border: 1px solid var(--gray-border);
   border-radius: var(--radius-md);
-  padding: 20px;
-  transition: all var(--transition-normal);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
 }
 
 .post-card:hover {
-  border-color: var(--accent-color);
-  box-shadow: var(--shadow-md);
 
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-color);
+}
+
+.post-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.post-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .post-title {
   color: var(--text-main);
-  font-size: 18px;
-  font-weight: 500;
-  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
   line-height: 1.4;
 }
 
-.post-meta {
-  display: flex;
-  align-items: center;
+.post-excerpt {
+  font-size: 15px;
   color: var(--text-muted);
-  font-size: 13px;
-  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 .post-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 .tag {
   background-color: rgba(88, 166, 255, 0.1);
   color: var(--accent-color);
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 13px;
   font-weight: 500;
 }
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-muted);
+  gap: 8px;
+  margin-top: auto;
+}
+
+.post-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 6px;
+}
+
+.post-user {
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.links_communities_box {
+  display: grid;
+}
+
+.collective-link {
+  padding: 10px 24px;
+}
+
 .posts-placeholder {
   padding: 60px;
   text-align: center;
@@ -166,12 +212,7 @@
   max-width: 500px;
   margin: 0 auto 24px;
 }
-.links_communities_box{
-  display: grid;
-}
-.collective-link {
-  padding: 10px 24px;
-}
+
 .placeholder-icon {
   width: 80px;
   height: 80px;

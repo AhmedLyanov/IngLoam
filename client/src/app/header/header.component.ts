@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { NgIf } from '@angular/common';
 import { ApiService } from '../service/service.service';
+import { RouterLink, Router } from '@angular/router';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-header',
@@ -11,23 +11,31 @@ import { ApiService } from '../service/service.service';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent implements OnInit {
-  isAuthenticated = false;
   username: string | null = null;
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private router: Router) {}
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.apiService.getProfile().subscribe({
-        next: (data) => {
-          this.username = data.profile.username;
-          this.isAuthenticated = true;
-        },
-        error: () => {
-          this.isAuthenticated = false;
-        }
-      });
-    }
+    this.apiService.username$.subscribe(name => {
+      this.username = name;
+    });
+  }
+
+  get isAuthenticated(): boolean {
+    return !!this.username;
+  }
+dropdownOpen = false;
+
+toggleDropdown() {
+  this.dropdownOpen = !this.dropdownOpen;
+}
+
+navigateTo(path: string) {
+  this.router.navigate([path]);
+  this.dropdownOpen = false;
+}
+
+  logout() {
+    this.apiService.logout();
   }
 }
