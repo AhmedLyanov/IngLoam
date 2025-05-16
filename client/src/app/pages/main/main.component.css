@@ -242,6 +242,38 @@
 }
 
 
+
+.collectives-section {
+  padding: 0 24px;
+  margin-top: 20px;
+}
+
+.collectives-section h1 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.links_communities_box {
+  display: grid;
+  gap: 6px;
+}
+
+.collective-link {
+  display: block;
+  padding: 8px 12px;
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.collective-link:hover {
+  background-color: var(--hover-gray);
+}
 .post-avatar {
   width: 28px;
   height: 28px;

@@ -6,10 +6,28 @@
       style="cursor: pointer"
     >
       <img
-        [src]="avatarUrl || 'https://avatars.githubusercontent.com/u/583231?v=4'"
+        [src]="
+          avatarUrl || 'https://avatars.githubusercontent.com/u/583231?v=4'
+        "
         alt="avatar"
         title="Кликните, чтобы изменить аватар"
+        class="avatar-image"
       />
+      <div class="avatar-overlay">
+        <svg
+          class="plus-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 7V17M7 12H17"
+            stroke="#fff"
+            stroke-width="1.2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
     </div>
     <input
       #fileInput
