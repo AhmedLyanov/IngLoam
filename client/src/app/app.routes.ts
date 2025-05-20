@@ -3,6 +3,7 @@ import { MainComponent } from './pages/main/main.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { CreatePostComponent } from './pages/create-post/create-post.component';
 export const routes: Routes = [
   {
     path: '',
@@ -19,6 +20,11 @@ export const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent
-  }
+  },
+   {
+    path: 'post',
+    component: CreatePostComponent
+  },
+
 
 ];

@@ -9,10 +9,8 @@ import { tap } from 'rxjs/operators';
 })
 export class ApiService {
   private apiUrl = 'http://localhost:3000';
-
   private currentUsername = new BehaviorSubject<string | null>(null);
   username$ = this.currentUsername.asObservable();
-
   private currentAvatar = new BehaviorSubject<string | null>(null);
   avatar$ = this.currentAvatar.asObservable();
 
@@ -76,7 +74,6 @@ export class ApiService {
   uploadAvatar(file: File) {
     const formData = new FormData();
     formData.append('avatar', file);
-
     const token = localStorage.getItem('token');
     return this.http
       .post<{ avatar: string }>(
@@ -93,6 +90,26 @@ export class ApiService {
           this.currentAvatar.next(response.avatar);
         })
       );
+  }
+
+  createPost(postData: { title: string; content: string; tags: string; image?: File }): Observable<any> {
+    const formData = new FormData();
+    formData.append('title', postData.title);
+    formData.append('content', postData.content);
+    formData.append('tags', postData.tags);
+    if (postData.image) {
+      formData.append('image', postData.image);
+    }
+    const token = localStorage.getItem('token');
+    return this.http.post(`${this.apiUrl}/posts`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
+  getPosts(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/posts`);
   }
 
   logout(): void {

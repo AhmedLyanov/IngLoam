@@ -323,3 +323,30 @@
   color: var(--accent-color);
   opacity: 0.5;
 }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-normal), transform var(--transition-normal);
+}
+.btn:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+.btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.5);
+}
+.create-post-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px; 
+}
