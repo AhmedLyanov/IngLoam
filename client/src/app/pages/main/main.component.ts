@@ -27,6 +27,6 @@ export class MainComponent implements OnInit {
   }
 
   navigateToCreatePost() {
-    this.router.navigate(['/create-post']);
+    this.router.navigate(['/post']);
   }
 }

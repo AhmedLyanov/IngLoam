@@ -9,7 +9,7 @@ const User = require("./model/user.model");
 const cors = require("cors");
 const app = express();
 app.use(cors());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'Uploads')));
 app.use(express.json());
 
 const storage = multer.diskStorage({
@@ -34,6 +34,7 @@ app.get("/profile", authenticate, async (req, res) => {
 });
 app.post('/posts', authenticate, upload.single('image'), postController.createPost);
 app.get('/posts', postController.getPosts);
+app.post('/update-resume', authenticate, userController.updateResume);
 
 mongoose.connect("mongodb://localhost:27017/practic")
   .then(() => app.listen(3000, () => console.log("Сервер запущен!")))

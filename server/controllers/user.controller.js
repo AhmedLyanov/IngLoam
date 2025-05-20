@@ -3,7 +3,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { sendConfirmationEmail } = require('../mailer/mailer.js');
 
-
 exports.register = async (req, res) => {
   try {
     const { name, surname, password, username, email } = req.body;
@@ -24,8 +23,12 @@ exports.register = async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      resume: {
+        education: [{ institution: 'Example University', degree: 'Bachelor of Science', startYear: '2018', endYear: '2022' }],
+        experience: [{ company: 'Example Corp', position: 'Junior Developer', startDate: '2022-06', endDate: 'Present', description: 'Worked on web applications.' }],
+        skills: ['JavaScript', 'Python', 'MongoDB']
+      }
     });
-
 
     await sendConfirmationEmail(email, username);
 
@@ -35,7 +38,6 @@ exports.register = async (req, res) => {
     res.status(500).json({ error: "Ошибка регистрации" });
   }
 };
-
 
 exports.login = async (req, res) => {
   try {
@@ -55,13 +57,12 @@ exports.login = async (req, res) => {
       "i3hduejm38",
       { expiresIn: "1h" }
     );
-    res.status(200).json({message:"Вход совершен", token})
+    res.status(200).json({ message: "Вход совершен", token });
   } catch (error) {
-    console.error(error)
+    console.error(error);
     res.status(500).json({ error: "Ошибка сервера" });
   }
 };
-
 
 exports.uploadAvatar = async (req, res) => {
   try {
@@ -75,5 +76,21 @@ exports.uploadAvatar = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Ошибка загрузки аватара' });
+  }
+};
+
+exports.updateResume = async (req, res) => {
+  try {
+    const { education, experience, skills } = req.body;
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ error: 'Пользователь не найден' });
+
+    user.resume = { education, experience, skills };
+    await user.save();
+
+    res.json({ message: 'Резюме обновлено', resume: user.resume });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Ошибка обновления резюме' });
   }
 };

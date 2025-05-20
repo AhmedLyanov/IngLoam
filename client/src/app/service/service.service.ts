@@ -4,6 +4,23 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 
+export interface Profile {
+  name: string;
+  surname: string;
+  username: string;
+  avatar: string | null;
+  resume: {
+    education: { institution: string; degree: string; startYear: string; endYear: string }[];
+    experience: { company: string; position: string; startDate: string; endDate: string; description: string }[];
+    skills: string[];
+  };
+}
+
+export interface UpdateResumeResponse {
+  message: string;
+  resume: Profile['resume'];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -13,6 +30,8 @@ export class ApiService {
   username$ = this.currentUsername.asObservable();
   private currentAvatar = new BehaviorSubject<string | null>(null);
   avatar$ = this.currentAvatar.asObservable();
+  private currentResume = new BehaviorSubject<Profile['resume'] | null>(null);
+  resume$ = this.currentResume.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {
     const token = localStorage.getItem('token');
@@ -21,10 +40,12 @@ export class ApiService {
         next: (data) => {
           this.currentUsername.next(data.profile.username);
           this.currentAvatar.next(data.profile.avatar || null);
+          this.currentResume.next(data.profile.resume || null);
         },
         error: () => {
           this.currentUsername.next(null);
           this.currentAvatar.next(null);
+          this.currentResume.next(null);
         },
       });
     }
@@ -53,25 +74,27 @@ export class ApiService {
             next: (data) => {
               this.currentUsername.next(data.profile.username);
               this.currentAvatar.next(data.profile.avatar || null);
+              this.currentResume.next(data.profile.resume || null);
             },
             error: () => {
               this.currentUsername.next(null);
               this.currentAvatar.next(null);
+              this.currentResume.next(null);
             },
           });
         })
       );
   }
 
-  getProfile(): Observable<any> {
+  getProfile(): Observable<{ message: string; profile: Profile }> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
-    return this.http.get(`${this.apiUrl}/profile`, { headers });
+    return this.http.get<{ message: string; profile: Profile }>(`${this.apiUrl}/profile`, { headers });
   }
 
-  uploadAvatar(file: File) {
+  uploadAvatar(file: File): Observable<{ avatar: string }> {
     const formData = new FormData();
     formData.append('avatar', file);
     const token = localStorage.getItem('token');
@@ -88,6 +111,25 @@ export class ApiService {
       .pipe(
         tap((response) => {
           this.currentAvatar.next(response.avatar);
+        })
+      );
+  }
+
+  updateResume(resume: Profile['resume']): Observable<UpdateResumeResponse> {
+    const token = localStorage.getItem('token');
+    return this.http
+      .post<UpdateResumeResponse>(
+        `${this.apiUrl}/update-resume`,
+        resume,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .pipe(
+        tap((response) => {
+          this.currentResume.next(response.resume);
         })
       );
   }
@@ -116,6 +158,7 @@ export class ApiService {
     localStorage.removeItem('token');
     this.currentUsername.next(null);
     this.currentAvatar.next(null);
+    this.currentResume.next(null);
     this.router.navigate(['/login']);
   }
 }
