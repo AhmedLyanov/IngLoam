@@ -13,6 +13,7 @@
         class="form-control"
         required
       >
+      <span class="helper-text">Enter a descriptive title for your post</span>
     </div>
     <div class="form-group">
       <label for="content">Content</label>
@@ -23,6 +24,7 @@
         rows="6"
         required
       ></textarea>
+      <span class="helper-text">Write your post content, supports markdown formatting</span>
     </div>
     <div class="form-group">
       <label for="tags">Tags (comma-separated)</label>
@@ -32,6 +34,7 @@
         [(ngModel)]="post.tags"
         class="form-control"
       >
+      <span class="helper-text">Add up to 5 tags, e.g., javascript, angular</span>
     </div>
     <div class="form-group">
       <label for="image">Image</label>
@@ -42,6 +45,7 @@
         class="form-control"
         accept="image/*"
       >
+      <span class="helper-text">Upload an image to enhance your post (JPEG, PNG)</span>
     </div>
     <button
       (click)="createPost()"
@@ -50,5 +54,6 @@
     >
       Publish
     </button>
-  </div>
+    <span class="helper-text">Submit your post to share it with the community</span>
+  </div>
 </div>

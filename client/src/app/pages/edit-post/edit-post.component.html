@@ -1,0 +1,26 @@
+<div class="edit-post-container">
+  <h1>Редактировать пост</h1>
+  <div class="form-group">
+    <label for="title">Заголовок</label>
+    <input id="title" [(ngModel)]="post.title" placeholder="Введите заголовок" />
+  </div>
+  <div class="form-group">
+    <label for="content">Содержимое</label>
+    <textarea id="content" [(ngModel)]="post.content" placeholder="Введите содержимое поста"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="tags">Теги (через запятую)</label>
+    <input id="tags" [(ngModel)]="post.tags" placeholder="например: javascript, angular" />
+  </div>
+  <div class="form-group">
+    <label for="image">Изображение</label>
+    <input id="image" type="file" accept="image/*" (change)="onFileSelected($event)" />
+    <img *ngIf="post.image && typeof post.image === 'string'" [src]="post.image" alt="Post preview" class="image-preview" />
+  </div>
+  <div class="form-actions">
+    <button class="btn btn-primary" (click)="updatePost()">Сохранить</button>
+    <button class="btn btn-secondary" (click)="cancel()">Отменить</button>
+  </div>
+  <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+  <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
+</div>

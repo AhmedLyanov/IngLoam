@@ -4,7 +4,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { CreatePostComponent } from './pages/create-post/create-post.component';
-
+import { PostEditComponent } from './pages/edit-post/edit-post.component';
 export const routes: Routes = [
   {
     path: '',
@@ -25,6 +25,6 @@ export const routes: Routes = [
    {
     path: 'post',
     component: CreatePostComponent
-  },
+  }, { path: 'post/:id', component: PostEditComponent },
 
 ];

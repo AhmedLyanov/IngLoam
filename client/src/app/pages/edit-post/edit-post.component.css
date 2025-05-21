@@ -1,0 +1,118 @@
+.edit-post-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: var(--bg-dark);
+  min-height: calc(100vh - 64px);
+}
+
+h1 {
+  color: var(--text-main);
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 24px;
+  font-family: 'Inter', sans-serif;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  font-family: 'Inter', sans-serif;
+}
+
+.form-group input,
+.form-group textarea {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-darker);
+  color: var(--text-main);
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  transition: border-color var(--transition-normal);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--accent-color);
+  outline: none;
+}
+
+.form-group textarea {
+  height: 150px;
+  resize: vertical;
+}
+
+.image-preview {
+  max-width: 200px;
+  margin-top: 8px;
+  border-radius: var(--radius-md);
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: var(--bg-darker);
+  color: var(--text-main);
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transition-normal);
+  font-family: 'Inter', sans-serif;
+}
+
+.btn:hover {
+  background-color: var(--gray-border);
+}
+
+.btn-primary {
+  background-color: var(--accent-color);
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-hover);
+}
+
+.btn-secondary {
+  background-color: var(--bg-light);
+  border: 1px solid var(--gray-border);
+}
+
+.btn-secondary:hover {
+  background-color: var(--gray-border);
+}
+
+.error-message {
+  color: #f85149;
+  font-size: 13px;
+  margin: 12px 0 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.success-message {
+  color: var(--accent-color);
+  font-size: 13px;
+  margin: 12px 0 0;
+  font-family: 'Inter', sans-serif;
+}

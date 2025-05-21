@@ -169,6 +169,35 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}/posts`);
   }
 
+  getPost(postId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/posts/${postId}`);
+  }
+
+  updatePost(postId: string, postData: { title: string; content: string; tags: string; image?: File }): Observable<any> {
+    const formData = new FormData();
+    formData.append('title', postData.title);
+    formData.append('content', postData.content);
+    formData.append('tags', postData.tags);
+    if (postData.image) {
+      formData.append('image', postData.image);
+    }
+    const token = localStorage.getItem('token');
+    return this.http.put(`${this.apiUrl}/posts/${postId}`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
+  deletePost(postId: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    return this.http.delete(`${this.apiUrl}/posts/${postId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
   logout(): void {
     localStorage.removeItem('token');
     this.currentUsername.next(null);
