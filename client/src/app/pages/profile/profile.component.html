@@ -34,16 +34,39 @@
     <h3>{{ name }} {{ surname }}</h3>
     <p class="username">{{ username }}</p>
     <div class="profile-actions">
-      <button class="btn" (click)="toggleEditResume()">Редактировать резюме</button>
       <button class="btn">Настройки</button>
       <button class="btn" (click)="logout()">Выйти</button>
     </div>
     <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+    <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
   </aside>
 
   <section class="profile-main-card">
     <div class="content-header">
-      <h1>Резюме</h1>
+      <h1>Моё резюме</h1>
+      <div class="header-actions">
+        <button class="btn btn-primary" (click)="toggleEditResume()">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7m-2.5-7.5L20 4m-1 0l-3 3m0 0l-3 3m3-3v9"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Редактировать
+        </button>
+        <button class="btn btn-danger" (click)="deleteResume()" [disabled]="resume.education.length === 0 && resume.experience.length === 0 && resume.skills.length === 0">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+              fill="currentColor"
+            />
+          </svg>
+          Удалить
+        </button>
+      </div>
     </div>
     <div *ngIf="!isEditingResume" class="resume-display">
       <div *ngIf="resume.education.length === 0 && resume.experience.length === 0 && resume.skills.length === 0" class="resume-placeholder">
@@ -52,60 +75,108 @@
         </svg>
         <h2>Резюме пока пусто</h2>
         <p>Добавьте информацию об образовании, опыте работы и навыках, чтобы создать своё резюме.</p>
-        <button class="btn" (click)="toggleEditResume()">Создать резюме</button>
+        <button class="btn btn-primary" (click)="toggleEditResume()">Создать резюме</button>
       </div>
-      <div *ngIf="resume.education.length > 0 || resume.experience.length > 0 || resume.skills.length > 0">
-        <h3>Образование</h3>
-        <div *ngFor="let edu of resume.education" class="resume-card">
-          <p class="resume-title"><strong>{{ edu.institution }}</strong> - {{ edu.degree }}</p>
-          <p class="resume-meta">{{ edu.startYear }} - {{ edu.endYear }}</p>
+      <div *ngIf="resume.education.length > 0 || resume.experience.length > 0 || resume.skills.length > 0" class="resume-content">
+        <div class="resume-section">
+          <h3>Образование</h3>
+          <div *ngFor="let edu of resume.education; let i = index" class="resume-card">
+            <div class="resume-card-header">
+              <p class="resume-title"><strong>{{ edu.institution }}</strong></p>
+              <p class="resume-subtitle">{{ edu.degree }}</p>
+            </div>
+            <p class="resume-meta">{{ edu.startYear }} - {{ edu.endYear }}</p>
+          </div>
         </div>
-        <h3>Опыт работы</h3>
-        <div *ngFor="let exp of resume.experience" class="resume-card">
-          <p class="resume-title"><strong>{{ exp.company }}</strong> - {{ exp.position }}</p>
-          <p class="resume-meta">{{ exp.startDate }} - {{ exp.endDate }}</p>
-          <p class="resume-description">{{ exp.description }}</p>
+        <div class="resume-section">
+          <h3>Опыт работы</h3>
+          <div *ngFor="let exp of resume.experience; let i = index" class="resume-card">
+            <div class="resume-card-header">
+              <p class="resume-title"><strong>{{ exp.company }}</strong></p>
+              <p class="resume-subtitle">{{ exp.position }}</p>
+            </div>
+            <p class="resume-meta">{{ exp.startDate }} - {{ exp.endDate }}</p>
+            <p class="resume-description">{{ exp.description }}</p>
+          </div>
         </div>
-        <h3>Навыки</h3>
-        <div class="skills-grid">
-          <span *ngFor="let skill of resume.skills" class="tag">{{ skill }}</span>
+        <div class="resume-section">
+          <h3>Навыки</h3>
+          <div class="skills-grid">
+            <span *ngFor="let skill of resume.skills" class="tag">{{ skill }}</span>
+          </div>
         </div>
       </div>
     </div>
     <div *ngIf="isEditingResume" class="resume-edit">
-      <h3>Редактировать образование</h3>
-      <div *ngFor="let edu of resume.education; let i = index" class="resume-card resume-card-edit">
-        <label for="institution-{{i}}">Учебное заведение</label>
-        <input id="institution-{{i}}" [(ngModel)]="edu.institution" placeholder="Учебное заведение" />
-        <label for="degree-{{i}}">Степень</label>
-        <input id="degree-{{i}}" [(ngModel)]="edu.degree" placeholder="Степень" />
-        <label for="startYear-{{i}}">Год начала</label>
-        <input id="startYear-{{i}}" [(ngModel)]="edu.startYear" placeholder="Год начала" />
-        <label for="endYear-{{i}}">Год окончания</label>
-        <input id="endYear-{{i}}" [(ngModel)]="edu.endYear" placeholder="Год окончания" />
+      <div class="resume-section">
+        <h3>Редактировать образование</h3>
+        <div *ngFor="let edu of resume.education; let i = index" class="resume-card resume-card-edit">
+          <div class="form-group">
+            <label for="institution-{{i}}">Учебное заведение</label>
+            <input id="institution-{{i}}" [(ngModel)]="edu.institution" placeholder="Учебное заведение" />
+          </div>
+          <div class="form-group">
+            <label for="degree-{{i}}">Степень</label>
+            <input id="degree-{{i}}" [(ngModel)]="edu.degree" placeholder="Степень" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="startYear-{{i}}">Год начала</label>
+              <input id="startYear-{{i}}" [(ngModel)]="edu.startYear" placeholder="Год начала" />
+            </div>
+            <div class="form-group">
+              <label for="endYear-{{i}}">Год окончания</label>
+              <input id="endYear-{{i}}" [(ngModel)]="edu.endYear" placeholder="Год окончания" />
+            </div>
+          </div>
+          <button class="btn btn-danger btn-sm" (click)="removeEducation(i)">Удалить</button>
+        </div>
+        <button class="btn btn-secondary" (click)="addEducation()">Добавить образование</button>
       </div>
-      <button class="btn" (click)="addEducation()">Добавить образование</button>
-      <h3>Редактировать опыт работы</h3>
-      <div *ngFor="let exp of resume.experience; let i = index" class="resume-card resume-card-edit">
-        <label for="company-{{i}}">Компания</label>
-        <input id="company-{{i}}" [(ngModel)]="exp.company" placeholder="Компания" />
-        <label for="position-{{i}}">Должность</label>
-        <input id="position-{{i}}" [(ngModel)]="exp.position" placeholder="Должность" />
-        <label for="startDate-{{i}}">Дата начала</label>
-        <input id="startDate-{{i}}" [(ngModel)]="exp.startDate" placeholder="Дата начала" />
-        <label for="endDate-{{i}}">Дата окончания</label>
-        <input id="endDate-{{i}}" [(ngModel)]="exp.endDate" placeholder="Дата окончания" />
-        <label for="description-{{i}}">Описание</label>
-        <textarea id="description-{{i}}" [(ngModel)]="exp.description" placeholder="Описание"></textarea>
+      <div class="resume-section">
+        <h3>Редактировать опыт работы</h3>
+        <div *ngFor="let exp of resume.experience; let i = index" class="resume-card resume-card-edit">
+          <div class="form-group">
+            <label for="company-{{i}}">Компания</label>
+            <input id="company-{{i}}" [(ngModel)]="exp.company" placeholder="Компания" />
+          </div>
+          <div class="form-group">
+            <label for="position-{{i}}">Должность</label>
+            <input id="position-{{i}}" [(ngModel)]="exp.position" placeholder="Должность" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="startDate-{{i}}">Дата начала</label>
+              <input id="startDate-{{i}}" [(ngModel)]="exp.startDate" placeholder="Дата начала" />
+            </div>
+            <div class="form-group">
+              <label for="endDate-{{i}}">Дата окончания</label>
+              <input id="endDate-{{i}}" [(ngModel)]="exp.endDate" placeholder="Дата окончания" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="description-{{i}}">Описание</label>
+            <textarea id="description-{{i}}" [(ngModel)]="exp.description" placeholder="Описание"></textarea>
+          </div>
+          <button class="btn btn-danger btn-sm" (click)="removeExperience(i)">Удалить</button>
+        </div>
+        <button class="btn btn-secondary" (click)="addExperience()">Добавить опыт</button>
       </div>
-      <button class="btn" (click)="addExperience()">Добавить опыт</button>
-      <h3>Редактировать навыки</h3>
-      <div *ngFor="let skill of resume.skills; let i = index" class="resume-card resume-card-edit">
-        <label for="skill-{{i}}">Навык</label>
-        <input id="skill-{{i}}" [(ngModel)]="resume.skills[i]" placeholder="Навык" />
+      <div class="resume-section">
+        <h3>Редактировать навыки</h3>
+        <div *ngFor="let skill of resume.skills; let i = index" class="resume-card resume-card-edit">
+          <div class="form-group">
+            <label for="skill-{{i}}">Навык</label>
+            <input id="skill-{{i}}" [(ngModel)]="resume.skills[i]" placeholder="Навык" />
+          </div>
+          <button class="btn btn-danger btn-sm" (click)="removeSkill(i)">Удалить</button>
+        </div>
+        <button class="btn btn-secondary" (click)="addSkill()">Добавить навык</button>
       </div>
-      <button class="btn" (click)="addSkill()">Добавить навык</button>
-      <button class="btn btn-save" (click)="saveResume()">Сохранить резюме</button>
+      <div class="form-actions">
+        <button class="btn btn-save" (click)="saveResume()">Сохранить резюме</button>
+        <button class="btn btn-secondary" (click)="toggleEditResume()">Отменить</button>
+      </div>
     </div>
   </section>
 </div>

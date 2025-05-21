@@ -35,6 +35,7 @@ app.get("/profile", authenticate, async (req, res) => {
 app.post('/posts', authenticate, upload.single('image'), postController.createPost);
 app.get('/posts', postController.getPosts);
 app.post('/update-resume', authenticate, userController.updateResume);
+app.delete('/delete-resume', authenticate, userController.deleteResume); // Added new route
 
 mongoose.connect("mongodb://localhost:27017/practic")
   .then(() => app.listen(3000, () => console.log("Сервер запущен!")))

@@ -17,6 +17,7 @@ export class ProfileComponent implements OnInit {
   username: string | null = null;
   avatarUrl: string | null = null;
   errorMessage: string = '';
+  successMessage: string = '';
   resume: any = {
     education: [],
     experience: [],
@@ -39,9 +40,9 @@ export class ProfileComponent implements OnInit {
         this.username = response.profile.username;
         this.avatarUrl = response.profile.avatar ? this.addCacheBuster(response.profile.avatar) : null;
         this.resume = response.profile.resume || {
-          education: [{ institution: '', degree: '', startYear: '', endYear: '' }],
-          experience: [{ company: '', position: '', startDate: '', endDate: '', description: '' }],
-          skills: ['']
+          education: [],
+          experience: [],
+          skills: []
         };
       },
       error: (error) => {
@@ -83,30 +84,68 @@ export class ProfileComponent implements OnInit {
 
   toggleEditResume() {
     this.isEditingResume = !this.isEditingResume;
+    this.successMessage = '';
+    this.errorMessage = '';
   }
 
   addEducation() {
     this.resume.education.push({ institution: '', degree: '', startYear: '', endYear: '' });
   }
 
+  removeEducation(index: number) {
+    this.resume.education.splice(index, 1);
+  }
+
   addExperience() {
     this.resume.experience.push({ company: '', position: '', startDate: '', endDate: '', description: '' });
+  }
+
+  removeExperience(index: number) {
+    this.resume.experience.splice(index, 1);
   }
 
   addSkill() {
     this.resume.skills.push('');
   }
 
+  removeSkill(index: number) {
+    this.resume.skills.splice(index, 1);
+  }
+
   saveResume() {
     this.apiService.updateResume(this.resume).subscribe({
       next: (response) => {
         this.isEditingResume = false;
+        this.successMessage = 'Резюме успешно сохранено';
+        this.errorMessage = '';
       },
       error: (err) => {
         console.error(err);
         this.errorMessage = 'Ошибка сохранения резюме';
+        this.successMessage = '';
       }
     });
+  }
+
+  deleteResume() {
+    if (confirm('Вы уверены, что хотите удалить резюме?')) {
+      this.apiService.deleteResume().subscribe({
+        next: (response) => {
+          this.resume = { education: [], experience: [], skills: [] };
+          this.isEditingResume = false;
+          this.successMessage = 'Резюме успешно удалено';
+          this.errorMessage = '';
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 3000);
+        },
+        error: (err) => {
+          console.error(err);
+          this.errorMessage = 'Ошибка удаления резюме';
+          this.successMessage = '';
+        }
+      });
+    }
   }
 
   private addCacheBuster(url: string): string {

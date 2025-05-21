@@ -24,9 +24,9 @@ exports.register = async (req, res) => {
       email,
       password: hashedPassword,
       resume: {
-        education: [{ institution: 'Example University', degree: 'Bachelor of Science', startYear: '2018', endYear: '2022' }],
-        experience: [{ company: 'Example Corp', position: 'Junior Developer', startDate: '2022-06', endDate: 'Present', description: 'Worked on web applications.' }],
-        skills: ['JavaScript', 'Python', 'MongoDB']
+        education: [],
+        experience: [],
+        skills: []
       }
     });
 
@@ -92,5 +92,20 @@ exports.updateResume = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Ошибка обновления резюме' });
+  }
+};
+
+exports.deleteResume = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ error: 'Пользователь не найден' });
+
+    user.resume = { education: [], experience: [], skills: [] };
+    await user.save();
+
+    res.json({ message: 'Резюме удалено' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Ошибка удаления резюме' });
   }
 };

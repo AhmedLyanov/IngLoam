@@ -134,6 +134,21 @@ export class ApiService {
       );
   }
 
+  deleteResume(): Observable<{ message: string }> {
+    const token = localStorage.getItem('token');
+    return this.http
+      .delete<{ message: string }>(`${this.apiUrl}/delete-resume`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .pipe(
+        tap(() => {
+          this.currentResume.next({ education: [], experience: [], skills: [] });
+        })
+      );
+  }
+
   createPost(postData: { title: string; content: string; tags: string; image?: File }): Observable<any> {
     const formData = new FormData();
     formData.append('title', postData.title);
