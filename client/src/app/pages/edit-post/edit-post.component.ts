@@ -73,7 +73,7 @@ export class PostEditComponent implements OnInit {
         next: () => {
           this.successMessage = 'Пост успешно обновлен';
           this.errorMessage = null;
-          setTimeout(() => this.router.navigate(['/home']), 1000);
+          setTimeout(() => this.router.navigate(['/']), 1000);
         },
         error: (err) => {
           this.errorMessage = 'Ошибка при обновлении поста';
@@ -84,6 +84,6 @@ export class PostEditComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/']);
   }
 }

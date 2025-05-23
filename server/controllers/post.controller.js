@@ -23,6 +23,47 @@ exports.createPost = async (req, res) => {
   }
 };
 
+
+exports.getPostById = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id).populate("author", "username avatar");
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+    res.status(200).json({ post });
+  } catch (error) {
+    console.error("Error fetching post:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+exports.updatePost = async (req, res) => {
+  try {
+    const { title, content, tags } = req.body;
+    if (!title || !content) {
+      return res.status(400).json({ error: "Title and content are required" });
+    }
+
+    const updateData = {
+      title,
+      content,
+      tags: tags ? tags.split(",").map(tag => tag.trim()) : [],
+      image: req.file ? `http://localhost:3000/uploads/${req.file.filename}` : req.body.image,
+    };
+
+    const post = await Post.findByIdAndUpdate(req.params.id, updateData, { new: true })
+      .populate("author", "username avatar");
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    res.status(200).json({ message: "Post updated", post });
+  } catch (error) {
+    console.error("Error updating post:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 exports.getPosts = async (req, res) => {
   try {
     const posts = await Post.find()

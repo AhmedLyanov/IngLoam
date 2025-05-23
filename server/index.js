@@ -32,10 +32,12 @@ app.get("/profile", authenticate, async (req, res) => {
   const profile = await User.findById(req.userId);
   res.json({ message: "Доступ разрешён!", profile });
 });
+app.get('/posts/:id', postController.getPostById);
+app.put('/posts/:id', authenticate, upload.single('image'), postController.updatePost);
 app.post('/posts', authenticate, upload.single('image'), postController.createPost);
 app.get('/posts', postController.getPosts);
 app.post('/update-resume', authenticate, userController.updateResume);
-app.delete('/delete-resume', authenticate, userController.deleteResume); // Added new route
+app.delete('/delete-resume', authenticate, userController.deleteResume); 
 
 mongoose.connect("mongodb://localhost:27017/practic")
   .then(() => app.listen(3000, () => console.log("Сервер запущен!")))
