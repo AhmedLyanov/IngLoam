@@ -23,6 +23,17 @@ exports.createPost = async (req, res) => {
   }
 };
 
+exports.getPosts = async (req, res) => {
+  try {
+    const posts = await Post.find()
+      .populate("author", "username avatar")
+      .sort({ createdAt: -1 });
+    res.status(200).json({ posts });
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
 
 exports.getPostById = async (req, res) => {
   try {
@@ -44,6 +55,15 @@ exports.updatePost = async (req, res) => {
       return res.status(400).json({ error: "Title and content are required" });
     }
 
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    if (post.author.toString() !== req.userId) {
+      return res.status(403).json({ error: "You are not authorized to update this post" });
+    }
+
     const updateData = {
       title,
       content,
@@ -51,27 +71,30 @@ exports.updatePost = async (req, res) => {
       image: req.file ? `http://localhost:3000/uploads/${req.file.filename}` : req.body.image,
     };
 
-    const post = await Post.findByIdAndUpdate(req.params.id, updateData, { new: true })
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, updateData, { new: true })
       .populate("author", "username avatar");
-    if (!post) {
-      return res.status(404).json({ error: "Post not found" });
-    }
-
-    res.status(200).json({ message: "Post updated", post });
+    res.status(200).json({ message: "Post updated", post: updatedPost });
   } catch (error) {
     console.error("Error updating post:", error);
     res.status(500).json({ error: "Server error" });
   }
 };
 
-exports.getPosts = async (req, res) => {
+exports.deletePost = async (req, res) => {
   try {
-    const posts = await Post.find()
-      .populate("author", "username avatar")
-      .sort({ createdAt: -1 });
-    res.status(200).json({ posts });
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    if (post.author.toString() !== req.userId) {
+      return res.status(403).json({ error: "You are not authorized to delete this post" });
+    }
+
+    await Post.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Post deleted successfully" });
   } catch (error) {
-    console.error("Error fetching posts:", error);
+    console.error("Error deleting post:", error);
     res.status(500).json({ error: "Server error" });
   }
 };

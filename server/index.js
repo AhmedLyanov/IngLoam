@@ -32,6 +32,7 @@ app.get("/profile", authenticate, async (req, res) => {
   const profile = await User.findById(req.userId);
   res.json({ message: "Доступ разрешён!", profile });
 });
+app.delete('/posts/:id', authenticate, postController.deletePost);
 app.get('/posts/:id', postController.getPostById);
 app.put('/posts/:id', authenticate, upload.single('image'), postController.updatePost);
 app.post('/posts', authenticate, upload.single('image'), postController.createPost);
