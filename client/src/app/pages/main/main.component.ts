@@ -54,7 +54,13 @@ export class MainComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error deleting post:', err);
-          alert('Ошибка при удалении поста');
+          if (err.status === 404) {
+            alert('Пост не найден');
+          } else if (err.status === 403) {
+            alert('Вы не можете удалить этот пост');
+          } else {
+            alert('Ошибка при удалении поста');
+          }
         }
       });
     }

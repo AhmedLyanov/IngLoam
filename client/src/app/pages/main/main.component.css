@@ -18,7 +18,36 @@
   min-height: calc(100vh - 64px);
   background-color: var(--bg-dark);
 }
+.no-posts {
+  background-color: var(--bg-light);
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
 
+.no-posts h3 {
+  color: var(--text-main);
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  font-family: 'Inter', sans-serif;
+}
+
+.no-posts p {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 16px;
+  font-family: 'Inter', sans-serif;
+}
+
+.no-posts .btn {
+  margin-top: 8px;
+}
 .sidebar {
   width: 250px;
   background-color: var(--bg-darker);
