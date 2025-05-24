@@ -18,6 +18,7 @@
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
+            "allowedCommonJsDependencies": ["highlight.js"],
             "assets": [
               {
                 "glob": "**/*",
@@ -25,15 +26,8 @@
               }
             ],
             "styles": [
-              "node_modules/prismjs/themes/prism-okaidia.css",
-              "src/styles.css"
-            ],
-            "scripts": [
-              "node_modules/prismjs/prism.js",
-              "node_modules/prismjs/components/prism-javascript.js",
-              "node_modules/prismjs/components/prism-python.js",
-              "node_modules/prismjs/components/prism-java.js",
-              "node_modules/prismjs/components/prism-cpp.js"
+              "src/styles.css",
+              "node_modules/highlight.js/styles/github.css"
             ]
           },
           "configurations": {
@@ -86,7 +80,10 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.css"],
+            "styles": [
+              "src/styles.css",
+              "node_modules/highlight.js/styles/github.css"
+            ],
             "scripts": []
           }
         }

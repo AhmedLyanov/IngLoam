@@ -86,9 +86,6 @@
       <div class="post-detail">
         <div class="post-header">
           <h1 class="post-title">{{ post.title }}</h1>
-          <div class="post-tags">
-            <span class="tag" *ngFor="let tag of post.tags">{{ tag }}</span>
-          </div>
           <div class="post-meta">
             <img
               class="post-avatar"
@@ -178,6 +175,7 @@
           class="post-code"
           *ngFor="let snippet of post.codeSnippets; let i = index"
         >
+        
           <div class="code-file" (click)="openCodeSidebar(snippet)">
             <div class="code-file-header">
               <div class="code-image">
@@ -188,7 +186,11 @@
               >
             </div>
           </div>
+            
         </div>
+         <div class="post-tags">
+            <span class="tag" *ngFor="let tag of post.tags">{{ tag }}</span>
+          </div>
 
         <div class="comments-section">
           <h2>Comments</h2>
@@ -244,7 +246,28 @@
         <span class="code-sidebar-title" *ngIf="selectedCodeSnippet"
           >code.{{ selectedCodeSnippet.language }}</span
         >
-        <button title="close" class="close-btn" (click)="closeCodeSidebar()">
+       
+
+        <div class="container_buttons_sidebar">
+           <button
+          title="Copy code"
+          class="copy-btn"
+          (click)="copyCode($event)"
+          *ngIf="selectedCodeSnippet"
+        >
+          <svg
+            class="copy-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"
+              fill="currentColor"
+            />
+          </svg>
+        </button>
+         <button title="close" class="close-btn" (click)="closeCodeSidebar()">
           <svg
             class="close-icon"
             viewBox="0 0 24 24"
@@ -260,9 +283,11 @@
             />
           </svg>
         </button>
+        </div>
+       
       </div>
       <div class="code-sidebar-content" *ngIf="selectedCodeSnippet">
-        <pre><code class="language-{{ selectedCodeSnippet.language }}">{{ selectedCodeSnippet.code }}</code></pre>
+        <pre><code [highlight]="selectedCodeSnippet.code" [language]="selectedCodeSnippet.language"></code></pre>
       </div>
     </div>
   </main>

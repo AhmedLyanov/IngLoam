@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../service/service.service';
 import { MarkdownPipe } from '../../pipes/markdown.pipe';
+import { HighlightModule } from 'ngx-highlightjs';
 
 @Component({
   selector: 'app-post-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, MarkdownPipe],
+  imports: [CommonModule, FormsModule, MarkdownPipe, HighlightModule],
   templateUrl: './post-detail.component.html',
-  styleUrls: ['./post-detail.component.css']
+  styleUrls: ['./post-detail.component.css'],
 })
 export class PostDetailComponent implements OnInit {
   post: any = null;
@@ -19,6 +20,7 @@ export class PostDetailComponent implements OnInit {
   newComment: string = '';
   isCodeSidebarOpen: boolean = false;
   selectedCodeSnippet: { code: string; language: string } | null = null;
+  copySuccess: boolean = false; // Tracks copy success for feedback
 
   constructor(
     private apiService: ApiService,
@@ -41,11 +43,11 @@ export class PostDetailComponent implements OnInit {
           } else {
             alert('Ошибка при загрузке поста');
           }
-        }
+        },
       });
     }
 
-    this.apiService.username$.subscribe(username => {
+    this.apiService.username$.subscribe((username) => {
       this.currentUsername = username;
     });
   }
@@ -64,7 +66,7 @@ export class PostDetailComponent implements OnInit {
       this.apiService.deletePost(postId).subscribe({
         next: () => {
           alert('Пост успешно удалён');
-          this.router.navigate(['/home']);
+          this.router.navigate(['/']);
         },
         error: (err) => {
           console.error('Error deleting post:', err);
@@ -75,7 +77,7 @@ export class PostDetailComponent implements OnInit {
           } else {
             alert('Ошибка при удалении поста');
           }
-        }
+        },
       });
     }
   }
@@ -90,7 +92,7 @@ export class PostDetailComponent implements OnInit {
         error: (err) => {
           console.error('Error adding comment:', err);
           alert('Ошибка при добавлении комментария');
-        }
+        },
       });
     }
   }
@@ -98,10 +100,30 @@ export class PostDetailComponent implements OnInit {
   openCodeSidebar(snippet: { code: string; language: string }) {
     this.selectedCodeSnippet = snippet;
     this.isCodeSidebarOpen = true;
+    this.copySuccess = false; 
   }
 
   closeCodeSidebar() {
     this.isCodeSidebarOpen = false;
     this.selectedCodeSnippet = null;
+    this.copySuccess = false; 
+  }
+
+  copyCode(event: Event) {
+    event.stopPropagation(); 
+    if (this.selectedCodeSnippet) {
+      navigator.clipboard
+        .writeText(this.selectedCodeSnippet.code)
+        .then(() => {
+          this.copySuccess = true; 
+          setTimeout(() => {
+            this.copySuccess = false; 
+          }, 2000);
+        })
+        .catch((err) => {
+          console.error('Failed to copy code:', err);
+          alert('Ошибка при копировании кода');
+        });
+    }
   }
 }
