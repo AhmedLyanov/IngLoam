@@ -17,6 +17,8 @@ export class PostDetailComponent implements OnInit {
   currentUsername: string | null = null;
   openMenuId: string | null = null;
   newComment: string = '';
+  isCodeSidebarOpen: boolean = false;
+  selectedCodeSnippet: { code: string; language: string } | null = null;
 
   constructor(
     private apiService: ApiService,
@@ -35,7 +37,7 @@ export class PostDetailComponent implements OnInit {
           console.error('Error fetching post:', err);
           if (err.status === 404) {
             alert('Пост не найден');
-            this.router.navigate(['/home']);
+            this.router.navigate(['/']);
           } else {
             alert('Ошибка при загрузке поста');
           }
@@ -91,5 +93,15 @@ export class PostDetailComponent implements OnInit {
         }
       });
     }
+  }
+
+  openCodeSidebar(snippet: { code: string; language: string }) {
+    this.selectedCodeSnippet = snippet;
+    this.isCodeSidebarOpen = true;
+  }
+
+  closeCodeSidebar() {
+    this.isCodeSidebarOpen = false;
+    this.selectedCodeSnippet = null;
   }
 }
