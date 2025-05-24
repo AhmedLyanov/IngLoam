@@ -5,6 +5,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { CreatePostComponent } from './pages/create-post/create-post.component';
 import { PostEditComponent } from './pages/edit-post/edit-post.component';
+import { PostDetailComponent } from './pages/post-detail/post-detail.component';
 export const routes: Routes = [
   {
     path: '',
@@ -20,11 +21,12 @@ export const routes: Routes = [
   },
   {
     path: 'profile',
-    component: ProfileComponent
+    component: ProfileComponent,
   },
-   {
+  {
     path: 'post',
-    component: CreatePostComponent
-  }, { path: 'post/:id', component: PostEditComponent },
-
+    component: CreatePostComponent,
+  },
+  { path: 'post/:id', component: PostEditComponent },
+  { path: 'posts/:id', component: PostDetailComponent },
 ];

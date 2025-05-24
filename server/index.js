@@ -34,9 +34,10 @@ app.get("/profile", authenticate, async (req, res) => {
 });
 app.delete('/posts/:id', authenticate, postController.deletePost);
 app.get('/posts/:id', postController.getPostById);
-app.put('/posts/:id', authenticate, upload.single('image'), postController.updatePost);
-app.post('/posts', authenticate, upload.single('image'), postController.createPost);
+app.put('/posts/:id', authenticate, upload.array('images', 5), postController.updatePost);
+app.post('/posts', authenticate, upload.array('images', 5), postController.createPost); 
 app.get('/posts', postController.getPosts);
+app.post('/posts/:id/comments', authenticate, postController.addComment); 
 app.post('/update-resume', authenticate, userController.updateResume);
 app.delete('/delete-resume', authenticate, userController.deleteResume); 
 

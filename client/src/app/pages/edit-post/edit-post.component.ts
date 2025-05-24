@@ -17,8 +17,10 @@ export class PostEditComponent implements OnInit {
     title: '',
     content: '',
     tags: '',
-    image: null
+    images: [],
+    codeSnippets: []
   };
+  imagePreviews: string[] = [];
   errorMessage: string | null = null;
   successMessage: string | null = null;
 
@@ -37,8 +39,13 @@ export class PostEditComponent implements OnInit {
             title: data.post.title,
             content: data.post.content,
             tags: data.post.tags.join(', '),
-            image: data.post.image
+            images: data.post.images,
+            codeSnippets: data.post.codeSnippets.map((snippet: any) => ({
+              language: snippet.language || 'javascript',
+              code: snippet.code
+            }))
           };
+          this.imagePreviews = [...this.post.images];
         },
         error: (err) => {
           this.errorMessage = 'Ошибка при загрузке поста';
@@ -48,11 +55,34 @@ export class PostEditComponent implements OnInit {
     }
   }
 
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.post.image = input.files[0];
+  onFileChange(event: any) {
+    const files = event.target.files;
+    if (files.length > 0) {
+      this.post.images = [...this.post.images, ...Array.from(files).slice(0, 5 - this.post.images.length)];
+      this.imagePreviews = [];
+      this.post.images.forEach((item: File | string) => {
+        if (typeof item === 'string') {
+          this.imagePreviews.push(item);
+        } else {
+          const reader = new FileReader();
+          reader.onload = (e: any) => this.imagePreviews.push(e.target.result);
+          reader.readAsDataURL(item);
+        }
+      });
     }
+  }
+
+  removeImage(index: number) {
+    this.post.images.splice(index, 1);
+    this.imagePreviews.splice(index, 1);
+  }
+
+  addSnippet() {
+    this.post.codeSnippets.push({ language: 'javascript', code: '' });
+  }
+
+  removeSnippet(index: number) {
+    this.post.codeSnippets.splice(index, 1);
   }
 
   updatePost() {
@@ -65,7 +95,8 @@ export class PostEditComponent implements OnInit {
       title: this.post.title,
       content: this.post.content,
       tags: this.post.tags,
-      image: this.post.image
+      images: this.post.images,
+      codeSnippets: this.post.codeSnippets
     };
 
     if (this.postId) {

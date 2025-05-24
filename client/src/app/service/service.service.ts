@@ -21,6 +21,11 @@ export interface UpdateResumeResponse {
   resume: Profile['resume'];
 }
 
+export interface CodeSnippet {
+  language: string;
+  code: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -149,13 +154,18 @@ export class ApiService {
       );
   }
 
-  createPost(postData: { title: string; content: string; tags: string; image?: File }): Observable<any> {
+  createPost(postData: { title: string; content: string; tags: string; images?: File[]; codeSnippets?: CodeSnippet[] }): Observable<any> {
     const formData = new FormData();
     formData.append('title', postData.title);
     formData.append('content', postData.content);
     formData.append('tags', postData.tags);
-    if (postData.image) {
-      formData.append('image', postData.image);
+    if (postData.images) {
+      postData.images.forEach((image, index) => {
+        formData.append('images', image);
+      });
+    }
+    if (postData.codeSnippets) {
+      formData.append('codeSnippets', JSON.stringify(postData.codeSnippets));
     }
     const token = localStorage.getItem('token');
     return this.http.post(`${this.apiUrl}/posts`, formData, {
@@ -173,13 +183,22 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}/posts/${postId}`);
   }
 
-  updatePost(postId: string, postData: { title: string; content: string; tags: string; image?: File }): Observable<any> {
+  updatePost(postId: string, postData: { title: string; content: string; tags: string; images?: File[] | string[]; codeSnippets?: CodeSnippet[] }): Observable<any> {
     const formData = new FormData();
     formData.append('title', postData.title);
     formData.append('content', postData.content);
     formData.append('tags', postData.tags);
-    if (postData.image) {
-      formData.append('image', postData.image);
+    if (postData.images) {
+      if (typeof postData.images[0] === 'string') {
+        formData.append('images', JSON.stringify(postData.images));
+      } else {
+        (postData.images as File[]).forEach((image, index) => {
+          formData.append('images', image);
+        });
+      }
+    }
+    if (postData.codeSnippets) {
+      formData.append('codeSnippets', JSON.stringify(postData.codeSnippets));
     }
     const token = localStorage.getItem('token');
     return this.http.put(`${this.apiUrl}/posts/${postId}`, formData, {
@@ -192,6 +211,15 @@ export class ApiService {
   deletePost(postId: string): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http.delete(`${this.apiUrl}/posts/${postId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
+  addComment(postId: string, content: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    return this.http.post(`${this.apiUrl}/posts/${postId}/comments`, { content }, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

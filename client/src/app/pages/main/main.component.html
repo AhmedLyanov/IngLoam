@@ -168,7 +168,9 @@
     </div>
    <div class="posts-grid">
   <ng-container *ngIf="posts.length > 0; else noPosts">
-    <div class="post-card" *ngFor="let post of posts">
+   <div class="posts-grid">
+  <ng-container *ngIf="posts.length > 0; else noPosts">
+    <div class="post-card" *ngFor="let post of posts" (click)="navigateToPost(post._id)" style="cursor: pointer;">
       <img
         [src]="post.image || 'https://source.unsplash.com/random/600x300?tech'"
         alt="Post preview"
@@ -195,7 +197,7 @@
           <span>{{ post.answersCount }} answers</span>
         </div>
       </div>
-      <div class="post-actions" *ngIf="post.author.username === currentUsername">
+      <div class="post-actions" *ngIf="post.author.username === currentUsername" (click)="$event.stopPropagation()">
         <button title="menu_post" class="more-btn" (click)="toggleMenu(post._id)">
           <svg class="more-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -229,6 +231,20 @@
         </div>
       </div>
     </div>
+  </ng-container>
+  <ng-template #noPosts>
+    <div class="no-posts">
+      <h3>Нет постов</h3>
+      <p>Создайте свой первый пост, чтобы начать обсуждение!</p>
+      <button class="btn btn-primary" (click)="navigateToCreatePost()">
+        <svg class="create-post-icon" viewBox="0 0 24 24">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+        </svg>
+        Создать пост
+      </button>
+    </div>
+  </ng-template>
+</div>
   </ng-container>
   <ng-template #noPosts>
     <div class="no-posts">

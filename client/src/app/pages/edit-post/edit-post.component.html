@@ -1,26 +1,86 @@
-<div class="edit-post-container">
-  <h1>Редактировать пост</h1>
-  <div class="form-group">
-    <label for="title">Заголовок</label>
-    <input id="title" [(ngModel)]="post.title" placeholder="Введите заголовок" />
+<div class="main-content">
+  <div class="content-header">
+    <h1>Edit Post</h1>
   </div>
-  <div class="form-group">
-    <label for="content">Содержимое</label>
-    <textarea id="content" [(ngModel)]="post.content" placeholder="Введите содержимое поста"></textarea>
+
+  <div class="edit-post-container">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input
+        id="title"
+        [(ngModel)]="post.title"
+        class="form-control"
+        placeholder="Enter title"
+        required
+      />
+      <span class="helper-text">Enter a descriptive title for your post</span>
+    </div>
+    <div class="form-group">
+      <label for="content">Content (Markdown supported)</label>
+      <textarea
+        id="content"
+        [(ngModel)]="post.content"
+        class="form-control"
+        placeholder="Enter post content"
+        rows="6"
+        required
+      ></textarea>
+      <span class="helper-text">Write your post content, supports markdown formatting</span>
+    </div>
+    <div class="form-group">
+      <label for="tags">Tags (comma-separated)</label>
+      <input
+        id="tags"
+        [(ngModel)]="post.tags"
+        class="form-control"
+        placeholder="e.g., javascript, angular"
+      />
+      <span class="helper-text">Add up to 5 tags</span>
+    </div>
+    <div class="form-group">
+      <label for="images">Images (up to 5)</label>
+      <input
+        id="images"
+        type="file"
+        (change)="onFileChange($event)"
+        class="form-control"
+        accept="image/*"
+        multiple
+      />
+      <div class="image-preview-container" *ngIf="imagePreviews.length > 0">
+        <div *ngFor="let preview of imagePreviews; let i = index" class="image-preview">
+          <img [src]="preview" alt="Image preview" />
+          <button class="remove-image" (click)="removeImage(i)">Remove</button>
+        </div>
+      </div>
+      <span class="helper-text">Upload images to enhance your post (JPEG, PNG)</span>
+    </div>
+    <div class="form-group">
+      <label>Code Snippets</label>
+      <div *ngFor="let snippet of post.codeSnippets; let i = index" class="code-snippet">
+        <div class="code-header">
+          <select title="form" [(ngModel)]="snippet.language" class="language-select">
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+            <option value="cpp">C++</option>
+          </select>
+          <button class="remove-snippet" (click)="removeSnippet(i)">Remove</button>
+        </div>
+        <textarea
+          [(ngModel)]="snippet.code"
+          class="form-control"
+          rows="4"
+          placeholder="Enter your code here"
+        ></textarea>
+      </div>
+      <button class="btn btn-secondary" (click)="addSnippet()">Add Code Snippet</button>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" (click)="updatePost()">Save</button>
+      <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    </div>
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+    <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
   </div>
-  <div class="form-group">
-    <label for="tags">Теги (через запятую)</label>
-    <input id="tags" [(ngModel)]="post.tags" placeholder="например: javascript, angular" />
-  </div>
-  <div class="form-group">
-    <label for="image">Изображение</label>
-    <input id="image" type="file" accept="image/*" (change)="onFileSelected($event)" />
-    <img *ngIf="post.image && typeof post.image === 'string'" [src]="post.image" alt="Post preview" class="image-preview" />
-  </div>
-  <div class="form-actions">
-    <button class="btn btn-primary" (click)="updatePost()">Сохранить</button>
-    <button class="btn btn-secondary" (click)="cancel()">Отменить</button>
-  </div>
-  <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
-  <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
 </div>

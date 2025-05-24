@@ -36,6 +36,10 @@ export class MainComponent implements OnInit {
     this.router.navigate(['/post']);
   }
 
+  navigateToPost(postId: string) {
+    this.router.navigate(['/posts', postId]);
+  }
+
   toggleMenu(postId: string) {
     this.openMenuId = this.openMenuId === postId ? null : postId;
   }
