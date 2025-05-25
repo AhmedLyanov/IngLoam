@@ -59,11 +59,27 @@
       <label>Code Snippets</label>
       <div *ngFor="let snippet of post.codeSnippets; let i = index" class="code-snippet">
         <div class="code-header">
-          <select title="form" [(ngModel)]="snippet.language" class="language-select">
+           <select title="form" [(ngModel)]="snippet.language" class="language-select">
             <option value="javascript">JavaScript</option>
             <option value="python">Python</option>
             <option value="java">Java</option>
             <option value="cpp">C++</option>
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+            <option value="typescript">TypeScript</option>
+            <option value="c">C</option>
+            <option value="csharp">C#</option>
+            <option value="php">PHP</option>
+            <option value="ruby">Ruby</option>
+            <option value="go">Go</option>
+            <option value="swift">Swift</option>
+            <option value="kotlin">Kotlin</option>
+            <option value="rust">Rust</option>
+            <option value="sql">SQL</option>
+            <option value="bash">Bash</option>
+            <option value="xml">XML</option>
+            <option value="json">JSON</option>
+            <option value="markdown">Markdown</option>
           </select>
           <button class="remove-snippet" (click)="removeSnippet(i)">Remove</button>
         </div>

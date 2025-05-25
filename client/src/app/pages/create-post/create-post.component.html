@@ -12,7 +12,7 @@
         [(ngModel)]="post.title"
         class="form-control"
         required
-      >
+      />
       <span class="helper-text">Enter a descriptive title for your post</span>
     </div>
     <div class="form-group">
@@ -24,7 +24,9 @@
         rows="6"
         required
       ></textarea>
-      <span class="helper-text">Write your post content, supports markdown formatting</span>
+      <span class="helper-text"
+        >Write your post content, supports markdown formatting</span
+      >
     </div>
     <div class="form-group">
       <label for="tags">Tags (comma-separated)</label>
@@ -33,8 +35,10 @@
         id="tags"
         [(ngModel)]="post.tags"
         class="form-control"
+      />
+      <span class="helper-text"
+        >Add up to 5 tags, e.g., javascript, angular</span
       >
-      <span class="helper-text">Add up to 5 tags, e.g., javascript, angular</span>
     </div>
     <div class="form-group">
       <label for="images">Images (up to 5)</label>
@@ -45,26 +49,56 @@
         class="form-control"
         accept="image/*"
         multiple
-      >
+      />
       <div class="image-preview-container" *ngIf="imagePreviews.length > 0">
-        <div *ngFor="let preview of imagePreviews; let i = index" class="image-preview">
+        <div
+          *ngFor="let preview of imagePreviews; let i = index"
+          class="image-preview"
+        >
           <img [src]="preview" alt="Image preview" />
           <button class="remove-image" (click)="removeImage(i)">Remove</button>
         </div>
       </div>
-      <span class="helper-text">Upload images to enhance your post (JPEG, PNG)</span>
+      <span class="helper-text"
+        >Upload images to enhance your post (JPEG, PNG)</span
+      >
     </div>
     <div class="form-group">
       <label>Code Snippets</label>
-      <div *ngFor="let snippet of post.codeSnippets; let i = index" class="code-snippet">
+      <div
+        *ngFor="let snippet of post.codeSnippets; let i = index"
+        class="code-snippet"
+      >
         <div class="code-header">
-          <select title="form" [(ngModel)]="snippet.language" class="language-select">
+          <select
+            title="form"
+            [(ngModel)]="snippet.language"
+            class="language-select"
+          >
             <option value="javascript">JavaScript</option>
             <option value="python">Python</option>
             <option value="java">Java</option>
             <option value="cpp">C++</option>
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+            <option value="typescript">TypeScript</option>
+            <option value="c">C</option>
+            <option value="csharp">C#</option>
+            <option value="php">PHP</option>
+            <option value="ruby">Ruby</option>
+            <option value="go">Go</option>
+            <option value="swift">Swift</option>
+            <option value="kotlin">Kotlin</option>
+            <option value="rust">Rust</option>
+            <option value="sql">SQL</option>
+            <option value="bash">Bash</option>
+            <option value="xml">XML</option>
+            <option value="json">JSON</option>
+            <option value="markdown">Markdown</option>
           </select>
-          <button class="remove-snippet" (click)="removeSnippet(i)">Remove</button>
+          <button class="remove-snippet" (click)="removeSnippet(i)">
+            Remove
+          </button>
         </div>
         <textarea
           [(ngModel)]="snippet.code"
@@ -73,7 +107,9 @@
           placeholder="Enter your code here"
         ></textarea>
       </div>
-      <button class="btn btn-secondary" (click)="addSnippet()">Add Code Snippet</button>
+      <button class="btn btn-secondary" (click)="addSnippet()">
+        Add Code Snippet
+      </button>
     </div>
     <button
       (click)="createPost()"
@@ -82,6 +118,8 @@
     >
       Publish
     </button>
-    <span class="helper-text">Submit your post to share it with the community</span>
+    <span class="helper-text"
+      >Submit your post to share it with the community</span
+    >
   </div>
 </div>

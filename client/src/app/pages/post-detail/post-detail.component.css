@@ -1,6 +1,4 @@
-/* ==================== */
-/* VARIABLES AND RESETS */
-/* ==================== */
+
 :host {
   --bg-dark: #0d1117;
   --bg-darker: #0a0d12;
@@ -22,9 +20,6 @@
   padding: 0;
 }
 
-/* ============= */
-/* BASE LAYOUT */
-/* ============= */
 .layout {
   display: flex;
   min-height: calc(100vh - 64px);
