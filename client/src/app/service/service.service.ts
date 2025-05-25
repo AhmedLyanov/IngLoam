@@ -183,23 +183,38 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}/posts/${postId}`);
   }
 
-  updatePost(postId: string, postData: { title: string; content: string; tags: string; images?: File[] | string[]; codeSnippets?: CodeSnippet[] }): Observable<any> {
+  updatePost(postId: string, postData: { title: string; content: string; tags: string; images?: (File | string)[]; codeSnippets?: CodeSnippet[] }): Observable<any> {
     const formData = new FormData();
     formData.append('title', postData.title);
     formData.append('content', postData.content);
     formData.append('tags', postData.tags);
+
+    const existingImages: string[] = [];
+    const newFiles: File[] = [];
     if (postData.images) {
-      if (typeof postData.images[0] === 'string') {
-        formData.append('images', JSON.stringify(postData.images));
-      } else {
-        (postData.images as File[]).forEach((image, index) => {
-          formData.append('images', image);
-        });
-      }
+      postData.images.forEach((item) => {
+        if (typeof item === 'string') {
+          existingImages.push(item);
+        } else {
+          newFiles.push(item);
+        }
+      });
     }
+
+
+    if (existingImages.length > 0) {
+      formData.append('existingImages', JSON.stringify(existingImages));
+    }
+
+ 
+    newFiles.forEach((file) => {
+      formData.append('images', file);
+    });
+
     if (postData.codeSnippets) {
       formData.append('codeSnippets', JSON.stringify(postData.codeSnippets));
     }
+
     const token = localStorage.getItem('token');
     return this.http.put(`${this.apiUrl}/posts/${postId}`, formData, {
       headers: {

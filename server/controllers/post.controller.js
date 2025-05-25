@@ -55,7 +55,7 @@ exports.getPostById = async (req, res) => {
 
 exports.updatePost = async (req, res) => {
   try {
-    const { title, content, tags, codeSnippets } = req.body;
+    const { title, content, tags, codeSnippets, existingImages } = req.body;
     if (!title || !content) {
       return res.status(400).json({ error: "Title and content are required" });
     }
@@ -69,11 +69,15 @@ exports.updatePost = async (req, res) => {
       return res.status(403).json({ error: "You are not authorized to update this post" });
     }
 
-    const images = req.files
-      ? req.files.map(file => `http://localhost:3000/uploads/${file.filename}`)
-      : req.body.images
-      ? JSON.parse(req.body.images)
-      : post.images;
+  
+    let images = post.images; 
+    if (existingImages) {
+      images = JSON.parse(existingImages); 
+    }
+    if (req.files && req.files.length > 0) {
+      const newImages = req.files.map(file => `http://localhost:3000/uploads/${file.filename}`);
+      images = [...images, ...newImages]; 
+    }
 
     const updateData = {
       title,

@@ -39,13 +39,13 @@ export class PostEditComponent implements OnInit {
             title: data.post.title,
             content: data.post.content,
             tags: data.post.tags.join(', '),
-            images: data.post.images,
+            images: data.post.images || [], 
             codeSnippets: data.post.codeSnippets.map((snippet: any) => ({
               language: snippet.language || 'javascript',
               code: snippet.code
             }))
           };
-          this.imagePreviews = [...this.post.images];
+          this.imagePreviews = [...this.post.images]; 
         },
         error: (err) => {
           this.errorMessage = 'Ошибка при загрузке поста';
@@ -58,7 +58,8 @@ export class PostEditComponent implements OnInit {
   onFileChange(event: any) {
     const files = event.target.files;
     if (files.length > 0) {
-      this.post.images = [...this.post.images, ...Array.from(files).slice(0, 5 - this.post.images.length)];
+      const newFiles = Array.from(files).slice(0, 5 - this.post.images.length);
+      this.post.images = [...this.post.images, ...newFiles];
       this.imagePreviews = [];
       this.post.images.forEach((item: File | string) => {
         if (typeof item === 'string') {
@@ -95,7 +96,7 @@ export class PostEditComponent implements OnInit {
       title: this.post.title,
       content: this.post.content,
       tags: this.post.tags,
-      images: this.post.images,
+      images: this.post.images, 
       codeSnippets: this.post.codeSnippets
     };
 
