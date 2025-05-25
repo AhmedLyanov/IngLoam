@@ -20,7 +20,9 @@ export class PostDetailComponent implements OnInit {
   newComment: string = '';
   isCodeSidebarOpen: boolean = false;
   selectedCodeSnippet: { code: string; language: string } | null = null;
-  copySuccess: boolean = false; // Tracks copy success for feedback
+  copySuccess: boolean = false;
+  isImageModalOpen: boolean = false;
+  selectedImage: string | null = null;
 
   constructor(
     private apiService: ApiService,
@@ -34,6 +36,7 @@ export class PostDetailComponent implements OnInit {
       this.apiService.getPost(postId).subscribe({
         next: (data) => {
           this.post = data.post;
+          console.log('Post:', this.post); // Debug to check images array
         },
         error: (err) => {
           console.error('Error fetching post:', err);
@@ -100,24 +103,24 @@ export class PostDetailComponent implements OnInit {
   openCodeSidebar(snippet: { code: string; language: string }) {
     this.selectedCodeSnippet = snippet;
     this.isCodeSidebarOpen = true;
-    this.copySuccess = false; 
+    this.copySuccess = false;
   }
 
   closeCodeSidebar() {
     this.isCodeSidebarOpen = false;
     this.selectedCodeSnippet = null;
-    this.copySuccess = false; 
+    this.copySuccess = false;
   }
 
   copyCode(event: Event) {
-    event.stopPropagation(); 
+    event.stopPropagation();
     if (this.selectedCodeSnippet) {
       navigator.clipboard
         .writeText(this.selectedCodeSnippet.code)
         .then(() => {
-          this.copySuccess = true; 
+          this.copySuccess = true;
           setTimeout(() => {
-            this.copySuccess = false; 
+            this.copySuccess = false;
           }, 2000);
         })
         .catch((err) => {
@@ -125,5 +128,15 @@ export class PostDetailComponent implements OnInit {
           alert('Ошибка при копировании кода');
         });
     }
+  }
+
+  openImageModal(image: string) {
+    this.selectedImage = image;
+    this.isImageModalOpen = true;
+  }
+
+  closeImageModal() {
+    this.isImageModalOpen = false;
+    this.selectedImage = null;
   }
 }

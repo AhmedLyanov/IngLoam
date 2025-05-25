@@ -167,6 +167,8 @@
               [src]="image"
               alt="Post image"
               class="post-image"
+              (click)="openImageModal(image)"
+              style="cursor: pointer;"
             />
           </div>
         </div>
@@ -175,7 +177,6 @@
           class="post-code"
           *ngFor="let snippet of post.codeSnippets; let i = index"
         >
-        
           <div class="code-file" (click)="openCodeSidebar(snippet)">
             <div class="code-file-header">
               <div class="code-image">
@@ -186,12 +187,10 @@
               >
             </div>
           </div>
-            
         </div>
-         <div class="post-tags">
-            <span class="tag" *ngFor="let tag of post.tags">{{ tag }}</span>
-          </div>
-
+        <div class="post-tags">
+          <span class="tag" *ngFor="let tag of post.tags">{{ tag }}</span>
+        </div>
         <div class="comments-section">
           <h2>Comments</h2>
           <div class="comment-form" *ngIf="currentUsername">
@@ -241,33 +240,11 @@
         <p>Загрузка поста...</p>
       </div>
     </ng-template>
-    <div class="code-sidebar" [ngClass]="{ open: isCodeSidebarOpen }">
-      <div class="code-sidebar-header">
-        <span class="code-sidebar-title" *ngIf="selectedCodeSnippet"
-          >code.{{ selectedCodeSnippet.language }}</span
-        >
-       
-
-        <div class="container_buttons_sidebar">
-           <button
-          title="Copy code"
-          class="copy-btn"
-          (click)="copyCode($event)"
-          *ngIf="selectedCodeSnippet"
-        >
-          <svg
-            class="copy-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"
-              fill="currentColor"
-            />
-          </svg>
-        </button>
-         <button title="close" class="close-btn" (click)="closeCodeSidebar()">
+    <!-- Image Modal -->
+    <div class="image-modal" *ngIf="isImageModalOpen" (click)="closeImageModal()">
+      <div class="image-modal-content" (click)="$event.stopPropagation()">
+        <img [src]="selectedImage" alt="Zoomed post image" class="zoomed-image" />
+        <button title="close_button" class="modal-close-btn" (click)="closeImageModal()">
           <svg
             class="close-icon"
             viewBox="0 0 24 24"
@@ -283,8 +260,49 @@
             />
           </svg>
         </button>
+      </div>
+    </div>
+    <div class="code-sidebar" [ngClass]="{ open: isCodeSidebarOpen }">
+      <div class="code-sidebar-header">
+        <span class="code-sidebar-title" *ngIf="selectedCodeSnippet"
+          >code.{{ selectedCodeSnippet.language }}</span
+        >
+        <div class="container_buttons_sidebar">
+          <button
+            title="Copy code"
+            class="copy-btn"
+            (click)="copyCode($event)"
+            *ngIf="selectedCodeSnippet"
+          >
+            <svg
+              class="copy-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"
+                fill="currentColor"
+              />
+            </svg>
+          </button>
+          <button title="close" class="close-btn" (click)="closeCodeSidebar()">
+            <svg
+              class="close-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M18 6L6 18M6 6l12 12"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
         </div>
-       
       </div>
       <div class="code-sidebar-content" *ngIf="selectedCodeSnippet">
         <pre><code [highlight]="selectedCodeSnippet.code" [language]="selectedCodeSnippet.language"></code></pre>

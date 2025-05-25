@@ -208,6 +208,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  border-bottom: 1px solid var(--gray-border) ;
+  padding-bottom: 5px;
 }
 
 .content-header h1 {
@@ -375,14 +377,7 @@
 .resume-placeholder {
   padding: 48px;
   text-align: center;
-  background-color: var(--bg-light);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--gray-border);
   transition: border-color var(--transition-normal);
-}
-
-.resume-placeholder:hover {
-  border-color: var(--accent-color);
 }
 
 .resume-placeholder h2 {

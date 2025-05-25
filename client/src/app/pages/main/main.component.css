@@ -19,9 +19,6 @@
   background-color: var(--bg-dark);
 }
 .no-posts {
-  background-color: var(--bg-light);
-  border: 1px solid var(--gray-border);
-  border-radius: var(--radius-md);
   padding: 24px;
   text-align: center;
   width: 100%;
@@ -49,7 +46,7 @@
   margin-top: 8px;
 }
 .sidebar {
-  width: 250px;
+  width: 340px;
   background-color: var(--bg-darker);
   padding: 24px 0;
   height: 100vh;
