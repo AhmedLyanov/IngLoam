@@ -18,7 +18,7 @@ const PostSchema = mongoose.Schema(
     title: { type: String, required: true },
     content: { type: String, required: true },
     tags: [{ type: String }],
-    images: [{ type: String, default: "" }],
+   images: [{ type: String, default: "" }],
     codeSnippets: [CodeSnippetSchema],
     author: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true },
     comments: [CommentSchema],

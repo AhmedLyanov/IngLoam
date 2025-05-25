@@ -9,7 +9,7 @@ const User = require("./model/user.model");
 const cors = require("cors");
 const app = express();
 app.use(cors());
-app.use('/uploads', express.static(path.join(__dirname, 'Uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 
 const storage = multer.diskStorage({

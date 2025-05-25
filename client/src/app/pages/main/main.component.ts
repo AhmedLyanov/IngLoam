@@ -21,6 +21,7 @@ export class MainComponent implements OnInit {
     this.apiService.getPosts().subscribe({
       next: (data) => {
         this.posts = data.posts;
+        console.log('Posts:', this.posts); // Debug to check images array
       },
       error: (err) => {
         console.error('Error fetching posts:', err);
