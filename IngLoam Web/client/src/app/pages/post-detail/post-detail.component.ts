@@ -36,7 +36,7 @@ export class PostDetailComponent implements OnInit {
       this.apiService.getPost(postId).subscribe({
         next: (data) => {
           this.post = data.post;
-          console.log('Post:', this.post); // Debug to check images array
+          console.log('Post:', this.post);
         },
         error: (err) => {
           console.error('Error fetching post:', err);
