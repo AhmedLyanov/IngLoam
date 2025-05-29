@@ -35,7 +35,8 @@ const routes = [
     component: Register,
     meta: {
       requiresAuth: false,
-      title: 'Регистрация'
+      title: 'Регистрация',
+      hideHeader: true 
     }
   },
   {
