@@ -9,15 +9,27 @@
         <span class="text_form">
           <h1>Вход</h1>
         </span>
-        
+
         <form @submit.prevent="handleLogin" class="auth-form">
           <div class="form-group">
             <label class="text_form" for="username">Имя пользователя</label>
-            <input v-model="form.username" type="text" id="username" placeholder="Введите имя пользователя" required />
+            <input
+              v-model="form.username"
+              type="text"
+              id="username"
+              placeholder="Введите имя пользователя"
+              required
+            />
           </div>
           <div class="form-group">
             <label class="text_form" for="password">Пароль</label>
-            <input v-model="form.password" type="password" id="password" placeholder="Введите пароль" required />
+            <input
+              v-model="form.password"
+              type="password"
+              id="password"
+              placeholder="Введите пароль"
+              required
+            />
           </div>
           <button type="submit" class="submit-button">Войти</button>
           <p v-if="error" class="error">{{ error }}</p>
@@ -81,12 +93,12 @@ export default {
     initNeuronNetwork() {
       const canvas = this.$refs.neuronCanvas
       const container = document.querySelector('.neuron-network-container')
-      
+
       container.style.width = `${this.config.width}px`
       container.style.height = `${this.config.height}px`
       canvas.width = this.config.width
       canvas.height = this.config.height
-      
+
       this.createNeurons()
       this.createConnections()
       this.selectRandomPulsingElements()
@@ -94,46 +106,59 @@ export default {
     },
 
     createNeurons() {
-      this.neurons = [];
+      this.neurons = []
       const fixedPositions = [
-        { x: 120, y: 180 }, { x: 280, y: 140 }, { x: 400, y: 220 }, { x: 520, y: 160 },
-        { x: 180, y: 320 }, { x: 300, y: 380 }, { x: 460, y: 340 }, { x: 600, y: 300 },
-        { x: 140, y: 500 }, { x: 260, y: 560 }, { x: 380, y: 480 }, { x: 500, y: 540 },
-        { x: 620, y: 200 }, { x: 740, y: 260 }, { x: 860, y: 180 }, { x: 680, y: 400 },
-        { x: 560, y: 620 }, { x: 800, y: 500 }
-      ];
-      
-      fixedPositions.forEach(pos => {
+        { x: 120, y: 180 },
+        { x: 280, y: 140 },
+        { x: 400, y: 220 },
+        { x: 520, y: 160 },
+        { x: 180, y: 320 },
+        { x: 300, y: 380 },
+        { x: 460, y: 340 },
+        { x: 600, y: 300 },
+        { x: 140, y: 500 },
+        { x: 260, y: 560 },
+        { x: 380, y: 480 },
+        { x: 500, y: 540 },
+        { x: 620, y: 200 },
+        { x: 740, y: 260 },
+        { x: 860, y: 180 },
+        { x: 680, y: 400 },
+        { x: 560, y: 620 },
+        { x: 800, y: 500 }
+      ]
+
+      fixedPositions.forEach((pos) => {
         this.neurons.push({
           x: pos.x,
           y: pos.y,
           radius: 6 + Math.random() * 4,
           pulsePhase: Math.random() * Math.PI * 2,
           pulseSpeed: 0.3 + Math.random() * 0.4
-        });
-      });
+        })
+      })
     },
 
     createConnections() {
       this.connections = []
-      
+
       for (let i = 0; i < this.neurons.length; i++) {
         let connectionCount = 0
-        
+
         for (let j = i + 1; j < this.neurons.length; j++) {
           if (connectionCount >= this.config.maxConnections) break
-          
+
           const dx = this.neurons[i].x - this.neurons[j].x
           const dy = this.neurons[i].y - this.neurons[j].y
           const distance = Math.sqrt(dx * dx + dy * dy)
-          
+
           if (distance < this.config.connectionDistance) {
             this.connections.push({
               from: i,
               to: j,
               pulsePhase: Math.random() * Math.PI * 2,
               pulseSpeed: 0.2 + Math.random() * 0.3,
-              width: 1.5 - (distance / this.config.connectionDistance)
+              width: 1.5 - distance / this.config.connectionDistance
             })
             connectionCount++
           }
@@ -151,13 +176,13 @@ export default {
     animate() {
       const canvas = this.$refs.neuronCanvas
       const ctx = canvas.getContext('2d')
-      
+
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      
+
       this.updatePulses()
       this.drawConnections(ctx)
       this.drawNeurons(ctx)
-      
+
       this.animationFrame = requestAnimationFrame(this.animate)
     },
 
@@ -182,13 +207,13 @@ export default {
 
     drawConnections(ctx) {
       ctx.lineCap = 'round'
-      
+
       this.connections.forEach((conn, index) => {
         const from = this.neurons[conn.from]
         const to = this.neurons[conn.to]
         const isPulsing = index === this.pulsingConnectionIndex
         const intensity = isPulsing ? (Math.sin(conn.pulsePhase) + 1) / 2 : 0
-        
+
         ctx.beginPath()
         ctx.moveTo(from.x, from.y)
         ctx.lineTo(to.x, to.y)
@@ -202,12 +227,12 @@ export default {
       this.neurons.forEach((neuron, index) => {
         const isPulsing = index === this.pulsingNeuronIndex
         const intensity = isPulsing ? (Math.sin(neuron.pulsePhase) + 1) / 2 : 0
-        
+
         ctx.beginPath()
         ctx.arc(neuron.x, neuron.y, neuron.radius + (isPulsing ? intensity * 4 : 0), 0, Math.PI * 2)
         ctx.fillStyle = this.lerpColor(this.colors.base, this.colors.pulse, intensity * 0.3)
         ctx.fill()
-        
+
         ctx.beginPath()
         ctx.arc(neuron.x, neuron.y, neuron.radius + (isPulsing ? intensity * 2 : 0), 0, Math.PI * 2)
         ctx.fillStyle = this.lerpColor(this.colors.base, this.colors.pulse, intensity)
@@ -218,20 +243,20 @@ export default {
     lerpColor(color1, color2, factor) {
       if (factor <= 0) return color1
       if (factor >= 1) return color2
-      
-      const hex = c => parseInt(c.substring(1), 16)
+
+      const hex = (c) => parseInt(c.substring(1), 16)
       const r1 = hex(color1) >> 16
       const g1 = (hex(color1) >> 8) & 0xff
       const b1 = hex(color1) & 0xff
-      
+
       const r2 = hex(color2) >> 16
       const g2 = (hex(color2) >> 8) & 0xff
       const b2 = hex(color2) & 0xff
-      
+
       const r = Math.round(r1 + factor * (r2 - r1))
       const g = Math.round(g1 + factor * (g2 - g1))
       const b = Math.round(b1 + factor * (b2 - b1))
-      
+
       return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`
     },
 
@@ -243,8 +268,6 @@ export default {
 </script>
 
 <style scoped>
-
-
 .page {
   position: relative;
   display: flex;
@@ -262,8 +285,8 @@ export default {
 
 .neuron-network-container {
   position: absolute;
- left: -150px;
-    top: 30%;
+  left: -150px;
+  top: 30%;
   transform: translateY(-50%);
   width: 1000px;
   height: 900px;
@@ -291,7 +314,7 @@ export default {
 }
 
 .text_form {
-  font-family: "Cabin", sans-serif;
+  font-family: 'Cabin', sans-serif;
   font-optical-sizing: auto;
 }
 
@@ -309,7 +332,7 @@ export default {
 }
 
 .container_registration_box h1 {
-  font-family: "Cabin", sans-serif;
+  font-family: 'Cabin', sans-serif;
   font-optical-sizing: auto;
   font-weight: 700;
   font-size: 30px;
@@ -365,14 +388,14 @@ input:focus {
   color: #f85149;
   font-size: 14px;
   text-align: center;
-  font-family: "Cabin", sans-serif;
+  font-family: 'Cabin', sans-serif;
   font-optical-sizing: auto;
 }
 
 a {
   color: #58a6ff;
   text-decoration: none;
-  font-family: "Cabin", sans-serif;
+  font-family: 'Cabin', sans-serif;
   font-optical-sizing: auto;
 }
 
