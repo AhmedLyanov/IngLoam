@@ -1,0 +1,41 @@
+{
+  "name": "text-editor",
+  "productName": "text-editor",
+  "version": "1.0.0",
+  "description": "My Electron application description",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
+  },
+  "keywords": [],
+  "author": "user",
+  "license": "MIT",
+  "dependencies": {
+    "@codemirror/lang-cpp": "^6.0.2",
+    "@codemirror/lang-css": "^6.3.1",
+    "@codemirror/lang-html": "^6.4.9",
+    "@codemirror/lang-java": "^6.0.1",
+    "@codemirror/lang-javascript": "^6.2.4",
+    "@codemirror/lang-markdown": "^6.3.2",
+    "@codemirror/lang-php": "^6.0.1",
+    "@codemirror/lang-python": "^6.2.1",
+    "@codemirror/lang-sql": "^6.9.0",
+    "@codemirror/lang-xml": "^6.1.0",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/view": "^6.37.1",
+    "codemirror": "^5.65.18",
+    "electron-squirrel-startup": "^1.0.0"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.0.0",
+    "@electron-forge/maker-deb": "^7.0.0",
+    "@electron-forge/maker-rpm": "^7.0.0",
+    "@electron-forge/maker-squirrel": "^7.0.0",
+    "@electron-forge/maker-zip": "^7.0.0",
+    "electron": "^25.0.0"
+  }
+}

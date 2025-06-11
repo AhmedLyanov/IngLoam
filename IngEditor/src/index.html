@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link href="style.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="codemirror.css"
+    />
+    <style>
+      .resize-handle {
+        position: absolute;
+        top: 0;
+        right: -5px;
+        width: 10px;
+        height: 100%;
+        cursor: col-resize;
+        z-index: 10;
+        background: rgba(255, 215, 0, 0.1);
+        transition: background 0.2s;
+      }
+
+      .resize-handle:hover,
+      .resize-handle:active {
+        background: rgba(255, 215, 0, 0.3);
+      }
+
+      #left-side {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background-color: var(--bg-color);
+        padding: 10px;
+        box-sizing: border-box;
+        border-right: 1px solid var(--border-color);
+        user-select: none;
+      }
+
+      #right-side {
+        position: fixed;
+        top: 0;
+        height: 100%;
+        background-color: var(--bg-color);
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="left-side">
+      <input id="create-input" type="text" />
+      <i id="add-icon" onclick="addIconClick()" class="material-icons">add</i>
+      <div class="resize-handle"></div>
+    </div>
+    <div id="right-side">
+      <div class="top_content">
+        <h1 id="title"></h1>
+        <div class="container__file_control_panel">
+          <i id="save-icon" onclick="saveIconClick()" class="material-icons"
+            >save</i
+          >
+          <i id="del-icon" onclick="delIconClick()" class="material-icons"
+            >delete</i
+          >
+        </div>
+      </div>
+      <div id="editor"></div>
+    </div>
+
+    <script src="../node_modules/codemirror/lib/codemirror.js"></script>
+    <script src="../node_modules/codemirror/mode/javascript/javascript.js"></script>
+    <script src="../node_modules/codemirror/mode/python/python.js"></script>
+    <script src="../node_modules/codemirror/mode/clike/clike.js"></script>
+    <script src="../node_modules/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="../node_modules/codemirror/mode/css/css.js"></script>
+    <script src="../node_modules/codemirror/mode/xml/xml.js"></script>
+    <script src="../node_modules/codemirror/mode/sql/sql.js"></script>
+    <script src="editor.js"></script>
+    <script>
+      // Функции для работы с localStorage
+      const saveSidebarWidth = (width) => {
+        localStorage.setItem("sidebarWidth", width.toString());
+      };
+
+      const loadSidebarWidth = () => {
+        const savedWidth = localStorage.getItem("sidebarWidth");
+        return savedWidth ? parseInt(savedWidth, 10) : 200; // Значение по умолчанию
+      };
+
+      // Инициализация элементов
+      const leftSide = document.querySelector("#left-side");
+      const rightSide = document.querySelector("#right-side");
+      const resizeHandle = document.querySelector(".resize-handle");
+      const editorContainer = document.querySelector("#editor");
+
+      // Установка начальной ширины
+      const initialWidth = loadSidebarWidth();
+      leftSide.style.width = `${initialWidth}px`;
+      rightSide.style.left = `${initialWidth}px`;
+      rightSide.style.width = `calc(100% - ${initialWidth}px)`;
+
+      // Переменные для изменения размера
+      let isResizing = false;
+      let lastDownX = 0;
+
+      // Обработчики событий для изменения размера
+      resizeHandle.addEventListener("mousedown", (e) => {
+        isResizing = true;
+        lastDownX = e.clientX;
+        document.body.style.cursor = "col-resize";
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", handleMouseUp);
+        e.preventDefault();
+      });
+
+      const handleMouseMove = (e) => {
+        if (!isResizing) return;
+
+        const offsetRight = e.clientX;
+        const newWidth = offsetRight;
+
+        // Ограничиваем минимальную и максимальную ширину
+        const minWidth = 150;
+        const maxWidth = 400;
+
+        if (newWidth < minWidth || newWidth > maxWidth) return;
+
+        leftSide.style.width = `${newWidth}px`;
+        rightSide.style.left = `${newWidth}px`;
+        rightSide.style.width = `calc(100% - ${newWidth}px`;
+
+        // Обновляем редактор
+        if (editor && editor.refresh) {
+          setTimeout(() => editor.refresh(), 0);
+        }
+      };
+
+      const handleMouseUp = () => {
+        if (!isResizing) return;
+
+        isResizing = false;
+        document.body.style.cursor = "";
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+
+        // Сохраняем новую ширину
+        const currentWidth = parseInt(leftSide.style.width, 10);
+        saveSidebarWidth(currentWidth);
+      };
+
+      // Ваш существующий код
+      let title = document.querySelector("#title");
+      let createInput = document.querySelector("#create-input");
+      let saveIcon = document.querySelector("#save-icon");
+      let editor = initCodeMirror("editor");
+
+      const addFileListItem = (fileName) => {
+        let div = document.createElement("div");
+        let p = document.createElement("p");
+        let i = document.createElement("i");
+        p.innerText = fileName;
+        p.className = "file-name";
+        i.className = "material-icons file-icon";
+        i.innerText = "description";
+        div.className = "file-block";
+        div.appendChild(i);
+        div.appendChild(p);
+        div.addEventListener("click", () => {
+          rightSide.style.display = "block";
+          title.innerText = fileName;
+          let content = window.electron.readFile(fileName);
+          editor.setValue(content || "");
+          setEditorMode(editor, fileName);
+        });
+        document.querySelector("#left-side").appendChild(div);
+      };
+
+      const getFileList = () => {
+        let files = window.electron.getFileNames();
+        if (files) {
+          let filesArray = files.split("\n").filter((file) => file);
+          filesArray.forEach((elem) => addFileListItem(elem));
+        }
+      };
+
+      getFileList();
+
+      const addIconClick = () => {
+        if (createInput.value) {
+          window.electron.createFile(createInput.value);
+          window.location.reload();
+        }
+      };
+
+      const saveIconClick = () => {
+        if (title.innerText) {
+          window.electron.writeFile(title.innerText, editor.getValue());
+          saveIcon.style.color = "var(--text-color)";
+        }
+      };
+
+      const delIconClick = () => {
+        if (title.innerText) {
+          window.electron.deleteFile(title.innerText);
+          editor.setValue("");
+          rightSide.style.display = "none";
+          window.location.reload();
+        }
+      };
+
+      editor.on("change", () => {
+        saveIcon.style.color = "var(--active-color)";
+      });
+    </script>
+  </body>
+</html>
