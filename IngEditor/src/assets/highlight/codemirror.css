@@ -2,7 +2,7 @@
   font-family: 'JetBrains Mono', monospace;
   height: 100vh;
   color: #d4d4d4;
-  background-color: #1e1e1e;
+  background-color: #0D1117;
   direction: ltr;
   line-height: 1.5;
   font-size: 13px;
@@ -28,7 +28,7 @@
 }
 
 .CodeMirror-linenumbers {
-  background-color: #1e1e1e;
+   background-color: #0D1117;
 }
 
 .CodeMirror-linenumber {

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link href="style.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="codemirror.css"
+    />
+    <style>
+      .resize-handle {
+        position: absolute;
+        top: 0;
+        right: -5px;
+        width: 10px;
+        height: 100%;
+        cursor: col-resize;
+        z-index: 10;
+        background: rgba(255, 215, 0, 0.1);
+        transition: background 0.2s;
+      }
+
+      .resize-handle:hover,
+      .resize-handle:active {
+        background: rgba(255, 215, 0, 0.3);
+      }
+
+      #left-side {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background-color: var(--bg-color);
+        padding: 10px;
+        box-sizing: border-box;
+        border-right: 1px solid var(--border-color);
+        user-select: none;
+      }
+
+      #right-side {
+        position: fixed;
+        top: 0;
+        height: 100%;
+        background-color: var(--bg-color);
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="left-side">
+      <input id="create-input" type="text" />
+      <i id="add-icon" onclick="addIconClick()" class="material-icons">add</i>
+      <div class="resize-handle"></div>
+    </div>
+    <div id="right-side">
+      <div class="top_content">
+        <h1 id="title"></h1>
+        <div class="container__file_control_panel">
+          <i id="save-icon" onclick="saveIconClick()" class="material-icons"
+            >save</i
+          >
+          <i id="del-icon" onclick="delIconClick()" class="material-icons"
+            >delete</i
+          >
+        </div>
+      </div>
+      <div id="editor"></div>
+    </div>
+
+    <script src="../node_modules/codemirror/lib/codemirror.js"></script>
+    <script src="../node_modules/codemirror/mode/javascript/javascript.js"></script>
+    <script src="../node_modules/codemirror/mode/python/python.js"></script>
+    <script src="../node_modules/codemirror/mode/clike/clike.js"></script>
+    <script src="../node_modules/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="../node_modules/codemirror/mode/css/css.js"></script>
+    <script src="../node_modules/codemirror/mode/xml/xml.js"></script>
+    <script src="../node_modules/codemirror/mode/sql/sql.js"></script>
+    <script src="editor.js"></script>
+  <script>
+  // Переменные для управления состоянием
+  let currentFilePath = null;
+  let recentFiles = [];
+  
+  // DOM элементы
+  const leftSide = document.querySelector("#left-side");
+  const rightSide = document.querySelector("#right-side");
+  const resizeHandle = document.querySelector(".resize-handle");
+  const title = document.querySelector("#title");
+  const createInput = document.querySelector("#create-input");
+  const saveIcon = document.querySelector("#save-icon");
+  const addIcon = document.querySelector("#add-icon");
+  const delIcon = document.querySelector("#del-icon");
+  
+  // Инициализация редактора
+  const editor = initCodeMirror("editor");
+  
+  // Управление размерами боковой панели
+  const saveSidebarWidth = (width) => {
+    localStorage.setItem("sidebarWidth", width.toString());
+  };
+
+  const loadSidebarWidth = () => {
+    const savedWidth = localStorage.getItem("sidebarWidth");
+    return savedWidth ? parseInt(savedWidth, 10) : 200;
+  };
+
+  const initialWidth = loadSidebarWidth();
+  leftSide.style.width = `${initialWidth}px`;
+  rightSide.style.left = `${initialWidth}px`;
+  rightSide.style.width = `calc(100% - ${initialWidth}px)`;
+
+  // Обработчики ресайза
+  let isResizing = false;
+  resizeHandle.addEventListener("mousedown", (e) => {
+    isResizing = true;
+    document.body.style.cursor = "col-resize";
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    e.preventDefault();
+  });
+
+  const handleMouseMove = (e) => {
+    if (!isResizing) return;
+
+    const newWidth = e.clientX;
+    const minWidth = 150;
+    const maxWidth = 400;
+
+    if (newWidth < minWidth || newWidth > maxWidth) return;
+
+    leftSide.style.width = `${newWidth}px`;
+    rightSide.style.left = `${newWidth}px`;
+    rightSide.style.width = `calc(100% - ${newWidth}px`;
+
+    if (editor.refresh) {
+      setTimeout(() => editor.refresh(), 0);
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (!isResizing) return;
+    isResizing = false;
+    document.body.style.cursor = "";
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
+    saveSidebarWidth(parseInt(leftSide.style.width, 10));
+  };
+
+  // Функции работы с файлами
+  const openFile = async () => {
+    const filePath = await window.electronAPI.openFileDialog();
+    if (filePath) {
+      await loadFile(filePath);
+    }
+  };
+
+  const loadFile = async (filePath) => {
+    try {
+      const content = await window.electronAPI.readFile(filePath);
+      editor.setValue(content);
+      currentFilePath = filePath;
+      title.textContent = window.electronAPI.getFileName(filePath);
+      rightSide.style.display = "block";
+      setEditorMode(editor, filePath);
+      addRecentFile(filePath);
+    } catch (err) {
+      console.error("Ошибка загрузки файла:", err);
+    }
+  };
+
+  const saveFile = async () => {
+    if (!currentFilePath) {
+      return await saveFileAs();
+    }
+    
+    try {
+      await window.electronAPI.writeFile(currentFilePath, editor.getValue());
+      saveIcon.style.color = "var(--text-color)";
+      return true;
+    } catch (err) {
+      console.error("Ошибка сохранения файла:", err);
+      return false;
+    }
+  };
+
+  const saveFileAs = async () => {
+    const defaultPath = currentFilePath || createInput.value || undefined;
+    const filePath = await window.electronAPI.saveFileDialog(defaultPath);
+    
+    if (filePath) {
+      await window.electronAPI.writeFile(filePath, editor.getValue());
+      currentFilePath = filePath;
+      title.textContent = window.electronAPI.getFileName(filePath);
+      saveIcon.style.color = "var(--text-color)";
+      addRecentFile(filePath);
+      return true;
+    }
+    return false;
+  };
+
+  const deleteFile = async () => {
+    if (!currentFilePath) return;
+    
+    try {
+      await window.electronAPI.deleteFile(currentFilePath);
+      editor.setValue("");
+      currentFilePath = null;
+      title.textContent = "";
+      rightSide.style.display = "none";
+      removeRecentFile(currentFilePath);
+    } catch (err) {
+      console.error("Ошибка удаления файла:", err);
+    }
+  };
+
+  // Работа со списком недавних файлов
+  const addRecentFile = (filePath) => {
+    recentFiles = recentFiles.filter(f => f !== filePath);
+    recentFiles.unshift(filePath);
+    if (recentFiles.length > 10) recentFiles.pop();
+    updateRecentFilesList();
+  };
+
+  const removeRecentFile = (filePath) => {
+    recentFiles = recentFiles.filter(f => f !== filePath);
+    updateRecentFilesList();
+  };
+
+  const updateRecentFilesList = () => {
+    const filesContainer = leftSide.querySelector(".recent-files");
+    if (!filesContainer) return;
+    
+    filesContainer.innerHTML = recentFiles.map(filePath => `
+      <div class="file-block">
+        <i class="material-icons file-icon">description</i>
+        <p class="file-name" title="${filePath}">${window.electronAPI.getFileName(filePath)}</p>
+      </div>
+    `).join("");
+    
+    document.querySelectorAll(".file-block").forEach((el, i) => {
+      el.addEventListener("click", () => loadFile(recentFiles[i]));
+    });
+  };
+
+  // Инициализация UI
+  const initUI = () => {
+    // Создаем контейнер для недавних файлов
+    const recentFilesContainer = document.createElement("div");
+    recentFilesContainer.className = "recent-files";
+    leftSide.insertBefore(recentFilesContainer, createInput.nextSibling);
+    
+    // Обновляем обработчики кнопок
+    addIcon.onclick = async () => {
+      if (createInput.value) {
+        const filePath = await window.electronAPI.saveFileDialog(createInput.value);
+        if (filePath) {
+          await window.electronAPI.writeFile(filePath, "");
+          await loadFile(filePath);
+          createInput.value = "";
+        }
+      }
+    };
+    
+    saveIcon.onclick = saveFile;
+    delIcon.onclick = deleteFile;
+    
+    // Добавляем обработчик изменений в редакторе
+    editor.on("change", () => {
+      saveIcon.style.color = "var(--active-color)";
+    });
+    
+    // Загружаем список недавних файлов из localStorage с обработкой ошибок
+    let savedRecentFiles = [];
+    try {
+      const recentFilesData = localStorage.getItem("recentFiles");
+      if (recentFilesData) {
+        savedRecentFiles = JSON.parse(recentFilesData);
+        if (!Array.isArray(savedRecentFiles)) {
+          savedRecentFiles = [];
+        }
+      }
+    } catch (error) {
+      console.error("Ошибка при чтении recentFiles из localStorage:", error);
+      savedRecentFiles = [];
+    }
+    
+    // Фильтруем только существующие файлы
+    recentFiles = savedRecentFiles.filter(filePath => {
+      try {
+        // В Electron используем fs модуль через ipc для проверки существования файла
+        // Это временное решение, лучше добавить отдельный IPC метод для проверки файлов
+        require('fs').accessSync(filePath);
+        return true;
+      } catch {
+        return false;
+      }
+    });
+    
+    updateRecentFilesList();
+  };
+
+  // Сохраняем список недавних файлов при закрытии с обработкой ошибок
+  window.addEventListener("beforeunload", () => {
+    try {
+      localStorage.setItem("recentFiles", JSON.stringify(recentFiles));
+    } catch (error) {
+      console.error("Ошибка при сохранении recentFiles в localStorage:", error);
+    }
+  });
+
+  // Инициализируем приложение
+  initUI();
+</script>
+  </body>
+</html>

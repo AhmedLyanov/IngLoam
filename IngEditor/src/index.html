@@ -1,61 +1,209 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-    <link href="style.css" rel="stylesheet" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="codemirror.css"
-    />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
-      .resize-handle {
-        position: absolute;
-        top: 0;
-        right: -5px;
-        width: 10px;
-        height: 100%;
-        cursor: col-resize;
-        z-index: 10;
-        background: rgba(255, 215, 0, 0.1);
-        transition: background 0.2s;
+      :root {
+        /* Холодная сине-серая палитра */
+        --bg-primary: #0D1117;
+        --bg-secondary: #161B22;
+        --bg-accent: #1F2937;
+        --text-primary: #E6EDF3;
+        --text-secondary: #7D8590;
+        --accent-color: #58A6FF;
+        --border-color: #30363D;
+        --danger-color: #FF7B72;
+        --success-color: #3FB950;
+        --highlight-color: rgba(88, 166, 255, 0.1);
       }
 
-      .resize-handle:hover,
-      .resize-handle:active {
-        background: rgba(255, 215, 0, 0.3);
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'IBM Plex Mono', monospace;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        height: 100vh;
+        overflow: hidden;
       }
 
       #left-side {
         position: fixed;
         top: 0;
         left: 0;
-        height: 100%;
-        background-color: var(--bg-color);
-        padding: 10px;
-        box-sizing: border-box;
+        width: 220px;
+        height: 100vh;
+        background-color: var(--bg-secondary);
         border-right: 1px solid var(--border-color);
-        user-select: none;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        z-index: 10;
+      }
+
+      #create-input {
+        width: 100%;
+        height: 32px;
+        background-color: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 13px;
+        font-weight: 400;
+        padding: 0 8px;
+        margin-bottom: 16px;
+        outline: none;
+      }
+
+      #create-input:focus {
+        border-color: var(--accent-color);
+      }
+
+      .material-icons {
+        font-size: 20px;
+        cursor: pointer;
+        color: var(--text-secondary);
+        transition: color 0.15s;
+      }
+
+      #add-icon {
+        position: absolute;
+        right: 16px;
+        top: 16px;
+      }
+
+      #add-icon:hover, #save-icon:hover, #del-icon:hover {
+        color: var(--accent-color);
       }
 
       #right-side {
         position: fixed;
         top: 0;
-        height: 100%;
-        background-color: var(--bg-color);
+        left: 220px;
+        right: 0;
+        bottom: 0;
+        background-color: var(--bg-primary);
         display: none;
+        flex-direction: column;
+      }
+
+      .top_content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        background-color: var(--bg-secondary);
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      #title {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .container__file_control_panel {
+        display: flex;
+        gap: 12px;
+      }
+
+      .recent-files {
+        margin-top: 8px;
+        overflow-y: auto;
+        flex-grow: 1;
+      }
+
+      .file-block {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        margin-bottom: 4px;
+        background-color: transparent;
+        border-left: 2px solid transparent;
+        transition: all 0.15s;
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      .file-block:hover {
+        background-color: var(--highlight-color);
+        border-left-color: var(--accent-color);
+      }
+
+      .file-icon {
+        margin-right: 8px;
+      }
+
+      .file-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      #editor {
+        position: absolute;
+        top: 49px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+
+      .CodeMirror {
+        height: 100%;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        background-color: var(--bg-primary);
+      }
+
+      .CodeMirror-gutters {
+        background-color: var(--bg-secondary);
+        border-right: 1px solid var(--border-color);
+      }
+
+      .CodeMirror-linenumber {
+        color: var(--text-secondary);
+      }
+
+      .CodeMirror-cursor {
+        border-left: 2px solid var(--accent-color);
+      }
+
+      .resize-handle {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 4px;
+        height: 100%;
+        cursor: col-resize;
+        z-index: 10;
+        background-color: transparent;
+        transition: background-color 0.15s;
+      }
+
+      .resize-handle:hover, .resize-handle:active {
+        background-color: var(--accent-color);
+      }
+
+      #del-icon {
+        color: var(--danger-color);
+      }
+
+      #save-icon.unsaved {
+        color: var(--accent-color);
       }
     </style>
+    <link rel="stylesheet" href="assets/highlight/codemirror.css" />
   </head>
   <body>
+    <!-- Остальная часть HTML остается без изменений -->
     <div id="left-side">
-      <input id="create-input" type="text" />
+      <input id="create-input" type="text" placeholder="New file..." />
       <i id="add-icon" onclick="addIconClick()" class="material-icons">add</i>
       <div class="resize-handle"></div>
     </div>
@@ -63,17 +211,12 @@
       <div class="top_content">
         <h1 id="title"></h1>
         <div class="container__file_control_panel">
-          <i id="save-icon" onclick="saveIconClick()" class="material-icons"
-            >save</i
-          >
-          <i id="del-icon" onclick="delIconClick()" class="material-icons"
-            >delete</i
-          >
+          <i id="save-icon" onclick="saveIconClick()" class="material-icons">save</i>
+          <i id="del-icon" onclick="delIconClick()" class="material-icons">delete</i>
         </div>
       </div>
       <div id="editor"></div>
     </div>
-
     <script src="../node_modules/codemirror/lib/codemirror.js"></script>
     <script src="../node_modules/codemirror/mode/javascript/javascript.js"></script>
     <script src="../node_modules/codemirror/mode/python/python.js"></script>
@@ -83,141 +226,256 @@
     <script src="../node_modules/codemirror/mode/xml/xml.js"></script>
     <script src="../node_modules/codemirror/mode/sql/sql.js"></script>
     <script src="editor.js"></script>
-    <script>
-      // Функции для работы с localStorage
-      const saveSidebarWidth = (width) => {
-        localStorage.setItem("sidebarWidth", width.toString());
-      };
+<script>
+  // Состояние приложения
+  let currentFilePath = null;
+  let recentFiles = [];
+  let editor = initCodeMirror("editor");
+  let isResizing = false;
 
-      const loadSidebarWidth = () => {
-        const savedWidth = localStorage.getItem("sidebarWidth");
-        return savedWidth ? parseInt(savedWidth, 10) : 200; // Значение по умолчанию
-      };
+  // DOM элементы
+  const leftSide = document.querySelector("#left-side");
+  const rightSide = document.querySelector("#right-side");
+  const resizeHandle = document.querySelector(".resize-handle");
+  const title = document.querySelector("#title");
+  const createInput = document.querySelector("#create-input");
+  const saveIcon = document.querySelector("#save-icon");
+  const addIcon = document.querySelector("#add-icon");
+  const delIcon = document.querySelector("#del-icon");
 
-      // Инициализация элементов
-      const leftSide = document.querySelector("#left-side");
-      const rightSide = document.querySelector("#right-side");
-      const resizeHandle = document.querySelector(".resize-handle");
-      const editorContainer = document.querySelector("#editor");
+  // Инициализация UI
+  const initUI = async () => {
+    // Создаем кнопку открытия файла
+    const openButton = document.createElement("i");
+    openButton.className = "material-icons";
+    openButton.textContent = "folder_open";
+    openButton.style.cursor = "pointer";
+    openButton.style.marginLeft = "10px";
+    openButton.onclick = openFile;
+    createInput.insertAdjacentElement("afterend", openButton);
 
-      // Установка начальной ширины
-      const initialWidth = loadSidebarWidth();
-      leftSide.style.width = `${initialWidth}px`;
-      rightSide.style.left = `${initialWidth}px`;
-      rightSide.style.width = `calc(100% - ${initialWidth}px)`;
+    // Загружаем состояние
+    await loadAppState();
+    
+    // Обработчики событий
+    addIcon.onclick = createNewFile;
+    saveIcon.onclick = saveCurrentFile;
+    delIcon.onclick = deleteCurrentFile;
+    editor.on("change", () => saveIcon.style.color = "var(--active-color)");
 
-      // Переменные для изменения размера
-      let isResizing = false;
-      let lastDownX = 0;
+    // Инициализация ресайза
+    initResizeHandle();
+  };
 
-      // Обработчики событий для изменения размера
-      resizeHandle.addEventListener("mousedown", (e) => {
-        isResizing = true;
-        lastDownX = e.clientX;
-        document.body.style.cursor = "col-resize";
-        document.addEventListener("mousemove", handleMouseMove);
-        document.addEventListener("mouseup", handleMouseUp);
-        e.preventDefault();
-      });
+  // Инициализация ресайза боковой панели
+  const initResizeHandle = () => {
+    const initialWidth = localStorage.getItem("sidebarWidth") 
+      ? Math.max(150, Math.min(400, parseInt(localStorage.getItem("sidebarWidth"))))
+      : 200;
+    
+    leftSide.style.width = `${initialWidth}px`;
+    updateEditorLayout();
 
-      const handleMouseMove = (e) => {
-        if (!isResizing) return;
+    resizeHandle.addEventListener("mousedown", (e) => {
+      isResizing = true;
+      document.body.style.cursor = "col-resize";
+      document.addEventListener("mousemove", handleResize);
+      document.addEventListener("mouseup", stopResize);
+      e.preventDefault();
+    });
+  };
 
-        const offsetRight = e.clientX;
-        const newWidth = offsetRight;
+  // Обновление позиции редактора
+  const updateEditorLayout = () => {
+    const leftWidth = parseInt(getComputedStyle(leftSide).width);
+    rightSide.style.left = `${leftWidth}px`;
+    rightSide.style.width = `calc(100% - ${leftWidth}px)`;
+    
+    if (editor && typeof editor.refresh === 'function') {
+      setTimeout(() => editor.refresh(), 10);
+    }
+  };
 
-        // Ограничиваем минимальную и максимальную ширину
-        const minWidth = 150;
-        const maxWidth = 400;
+  // Обработка ресайза
+  const handleResize = (e) => {
+    if (!isResizing) return;
+    
+    const newWidth = e.clientX;
+    const minWidth = 150;
+    const maxWidth = 400;
 
-        if (newWidth < minWidth || newWidth > maxWidth) return;
+    if (newWidth < minWidth || newWidth > maxWidth) return;
 
-        leftSide.style.width = `${newWidth}px`;
-        rightSide.style.left = `${newWidth}px`;
-        rightSide.style.width = `calc(100% - ${newWidth}px`;
+    leftSide.style.width = `${newWidth}px`;
+    updateEditorLayout();
+  };
 
-        // Обновляем редактор
-        if (editor && editor.refresh) {
-          setTimeout(() => editor.refresh(), 0);
-        }
-      };
+  const stopResize = () => {
+    if (!isResizing) return;
+    isResizing = false;
+    document.body.style.cursor = "";
+    document.removeEventListener("mousemove", handleResize);
+    document.removeEventListener("mouseup", stopResize);
+    localStorage.setItem("sidebarWidth", parseInt(leftSide.style.width));
+  };
 
-      const handleMouseUp = () => {
-        if (!isResizing) return;
-
-        isResizing = false;
-        document.body.style.cursor = "";
-        document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("mouseup", handleMouseUp);
-
-        // Сохраняем новую ширину
-        const currentWidth = parseInt(leftSide.style.width, 10);
-        saveSidebarWidth(currentWidth);
-      };
-
-      // Ваш существующий код
-      let title = document.querySelector("#title");
-      let createInput = document.querySelector("#create-input");
-      let saveIcon = document.querySelector("#save-icon");
-      let editor = initCodeMirror("editor");
-
-      const addFileListItem = (fileName) => {
-        let div = document.createElement("div");
-        let p = document.createElement("p");
-        let i = document.createElement("i");
-        p.innerText = fileName;
-        p.className = "file-name";
-        i.className = "material-icons file-icon";
-        i.innerText = "description";
-        div.className = "file-block";
-        div.appendChild(i);
-        div.appendChild(p);
-        div.addEventListener("click", () => {
-          rightSide.style.display = "block";
-          title.innerText = fileName;
-          let content = window.electron.readFile(fileName);
-          editor.setValue(content || "");
-          setEditorMode(editor, fileName);
+  // Загрузка состояния приложения
+  const loadAppState = async () => {
+    try {
+      const state = JSON.parse(localStorage.getItem("editorState") || "{}");
+      
+      // Загружаем список последних файлов
+      if (state.recentFiles) {
+        recentFiles = state.recentFiles.filter(filePath => {
+          try {
+            return window.electronAPI.checkFileExists(filePath);
+          } catch {
+            return false;
+          }
         });
-        document.querySelector("#left-side").appendChild(div);
-      };
+        updateRecentFilesList();
+      }
+      
+      // Восстанавливаем последний открытый файл
+      if (state.lastOpenedFile && await window.electronAPI.checkFileExists(state.lastOpenedFile)) {
+        await loadFile(state.lastOpenedFile);
+      }
+    } catch (e) {
+      console.error("Ошибка загрузки состояния:", e);
+    }
+  };
 
-      const getFileList = () => {
-        let files = window.electron.getFileNames();
-        if (files) {
-          let filesArray = files.split("\n").filter((file) => file);
-          filesArray.forEach((elem) => addFileListItem(elem));
-        }
-      };
+  // Сохранение состояния приложения
+  const saveAppState = () => {
+    const state = {
+      lastOpenedFile: currentFilePath,
+      recentFiles: recentFiles.slice(0, 10) // Сохраняем только 10 последних
+    };
+    localStorage.setItem("editorState", JSON.stringify(state));
+  };
 
-      getFileList();
+  // Обновление списка последних файлов
+  const updateRecentFilesList = () => {
+    const container = leftSide.querySelector(".recent-files") || document.createElement("div");
+    container.className = "recent-files";
+    container.innerHTML = recentFiles.map(file => `
+      <div class="file-block">
+        <i class="material-icons file-icon">${file === currentFilePath ? 'drafts' : 'description'}</i>
+        <p class="file-name" title="${file}">${window.electronAPI.getFileName(file)}</p>
+      </div>
+    `).join("");
+    
+    if (!leftSide.querySelector(".recent-files")) {
+      leftSide.appendChild(container);
+    }
+    
+    // Добавляем обработчики клика
+    container.querySelectorAll(".file-block").forEach((el, i) => {
+      el.onclick = () => loadFile(recentFiles[i]);
+    });
+  };
 
-      const addIconClick = () => {
-        if (createInput.value) {
-          window.electron.createFile(createInput.value);
-          window.location.reload();
-        }
-      };
+  // Открытие файла
+  const openFile = async () => {
+    const filePath = await window.electronAPI.openFileDialog();
+    if (filePath) {
+      await loadFile(filePath);
+    }
+  };
 
-      const saveIconClick = () => {
-        if (title.innerText) {
-          window.electron.writeFile(title.innerText, editor.getValue());
-          saveIcon.style.color = "var(--text-color)";
-        }
-      };
+  // Загрузка файла в редактор
+  const loadFile = async (filePath) => {
+    try {
+      const content = await window.electronAPI.readFile(filePath);
+      editor.setValue(content);
+      currentFilePath = filePath;
+      title.textContent = window.electronAPI.getFileName(filePath);
+      
+      // Показываем правую панель
+      rightSide.style.display = "flex";
+      updateEditorLayout();
+      
+      setEditorMode(editor, filePath);
+      
+      // Обновляем список последних файлов
+      recentFiles = [
+        filePath,
+        ...recentFiles.filter(f => f !== filePath)
+      ].slice(0, 10);
+      
+      updateRecentFilesList();
+      saveAppState();
+    } catch (error) {
+      console.error("Ошибка загрузки файла:", error);
+    }
+  };
 
-      const delIconClick = () => {
-        if (title.innerText) {
-          window.electron.deleteFile(title.innerText);
-          editor.setValue("");
-          rightSide.style.display = "none";
-          window.location.reload();
-        }
-      };
+  // Создание нового файла
+  const createNewFile = async () => {
+    const fileName = createInput.value.trim();
+    if (!fileName) return;
+    
+    const filePath = await window.electronAPI.saveFileDialog(fileName);
+    if (filePath) {
+      try {
+        await window.electronAPI.writeFile(filePath, "");
+        createInput.value = "";
+        await loadFile(filePath);
+      } catch (error) {
+        console.error("Ошибка создания файла:", error);
+      }
+    }
+  };
 
-      editor.on("change", () => {
-        saveIcon.style.color = "var(--active-color)";
-      });
-    </script>
+  // Сохранение текущего файла
+  const saveCurrentFile = async () => {
+    if (!currentFilePath) {
+      return await saveFileAs();
+    }
+    
+    try {
+      await window.electronAPI.writeFile(currentFilePath, editor.getValue());
+      saveIcon.style.color = "var(--text-color)";
+      saveAppState();
+      return true;
+    } catch (error) {
+      console.error("Ошибка сохранения файла:", error);
+      return false;
+    }
+  };
+
+  // Сохранение как нового файла
+  const saveFileAs = async () => {
+    const filePath = await window.electronAPI.saveFileDialog(currentFilePath);
+    if (filePath) {
+      await window.electronAPI.writeFile(filePath, editor.getValue());
+      await loadFile(filePath);
+      return true;
+    }
+    return false;
+  };
+
+  // Удаление текущего файла
+  const deleteCurrentFile = async () => {
+    if (!currentFilePath || !confirm("Удалить текущий файл?")) return;
+    
+    try {
+      await window.electronAPI.deleteFile(currentFilePath);
+      editor.setValue("");
+      recentFiles = recentFiles.filter(f => f !== currentFilePath);
+      currentFilePath = null;
+      title.textContent = "";
+      rightSide.style.display = "none";
+      saveAppState();
+      updateRecentFilesList();
+    } catch (error) {
+      console.error("Ошибка удаления файла:", error);
+    }
+  };
+
+  // Инициализация при загрузке
+  window.addEventListener("load", initUI);
+  window.addEventListener("beforeunload", saveAppState);
+</script>
   </body>
 </html>

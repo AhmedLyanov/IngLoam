@@ -1,23 +1,11 @@
-const {contextBridge} = require('electron');
-const path = require('path');
-const fs = require('fs');
+const { contextBridge, ipcRenderer } = require('electron');
 
-const getFilePath = (fileName) => path.join(__dirname, 'files', fileName);
-
-contextBridge.exposeInMainWorld('electron', {
-  getFileNames: () => {
-    let files = fs.readdirSync(path.join(__dirname, 'files'))
-      .map(fileName => fileName);
-    return files.join('\n');
-  },
-  readFile: (fileName) => {
-    let fileText = fs.readFileSync(getFilePath(fileName), 'utf8');
-    return fileText;
-  },
-  createFile: (fileName) => {
-    let fileTitle = getFilePath(fileName);
-    fs.writeFileSync(fileTitle, '');
-  },
-  writeFile: (fileName, fileText) => fs.writeFileSync(getFilePath(fileName), fileText),
-  deleteFile: (fileName) => fs.unlinkSync(getFilePath(fileName))
+contextBridge.exposeInMainWorld('electronAPI', {
+  openFileDialog: () => ipcRenderer.invoke('open-file-dialog'),
+  saveFileDialog: (defaultPath) => ipcRenderer.invoke('save-file-dialog', defaultPath),
+  readFile: (filePath) => ipcRenderer.invoke('read-file', filePath),
+  writeFile: (filePath, content) => ipcRenderer.invoke('write-file', filePath, content),
+  deleteFile: (filePath) => ipcRenderer.invoke('delete-file', filePath),
+  getFileName: (path) => path.split(/[\\/]/).pop(),
+  checkFileExists: (filePath) => ipcRenderer.invoke('check-file-exists', filePath)
 });
