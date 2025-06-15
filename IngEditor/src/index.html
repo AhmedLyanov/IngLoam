@@ -3,205 +3,10 @@
   <head>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-    <style>
-      :root {
-        /* Холодная сине-серая палитра */
-        --bg-primary: #0D1117;
-        --bg-secondary: #161B22;
-        --bg-accent: #1F2937;
-        --text-primary: #E6EDF3;
-        --text-secondary: #7D8590;
-        --accent-color: #58A6FF;
-        --border-color: #30363D;
-        --danger-color: #FF7B72;
-        --success-color: #3FB950;
-        --highlight-color: rgba(88, 166, 255, 0.1);
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: 'IBM Plex Mono', monospace;
-        background-color: var(--bg-primary);
-        color: var(--text-primary);
-        height: 100vh;
-        overflow: hidden;
-      }
-
-      #left-side {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 220px;
-        height: 100vh;
-        background-color: var(--bg-secondary);
-        border-right: 1px solid var(--border-color);
-        padding: 16px;
-        display: flex;
-        flex-direction: column;
-        z-index: 10;
-      }
-
-      #create-input {
-        width: 100%;
-        height: 32px;
-        background-color: var(--bg-primary);
-        border: 1px solid var(--border-color);
-        color: var(--text-primary);
-        font-family: 'IBM Plex Mono', monospace;
-        font-size: 13px;
-        font-weight: 400;
-        padding: 0 8px;
-        margin-bottom: 16px;
-        outline: none;
-      }
-
-      #create-input:focus {
-        border-color: var(--accent-color);
-      }
-
-      .material-icons {
-        font-size: 20px;
-        cursor: pointer;
-        color: var(--text-secondary);
-        transition: color 0.15s;
-      }
-
-      #add-icon {
-        position: absolute;
-        right: 16px;
-        top: 16px;
-      }
-
-      #add-icon:hover, #save-icon:hover, #del-icon:hover {
-        color: var(--accent-color);
-      }
-
-      #right-side {
-        position: fixed;
-        top: 0;
-        left: 220px;
-        right: 0;
-        bottom: 0;
-        background-color: var(--bg-primary);
-        display: none;
-        flex-direction: column;
-      }
-
-      .top_content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px 16px;
-        background-color: var(--bg-secondary);
-        border-bottom: 1px solid var(--border-color);
-      }
-
-      #title {
-        font-size: 15px;
-        font-weight: 500;
-        color: var(--text-primary);
-      }
-
-      .container__file_control_panel {
-        display: flex;
-        gap: 12px;
-      }
-
-      .recent-files {
-        margin-top: 8px;
-        overflow-y: auto;
-        flex-grow: 1;
-      }
-
-      .file-block {
-        display: flex;
-        align-items: center;
-        padding: 8px;
-        margin-bottom: 4px;
-        background-color: transparent;
-        border-left: 2px solid transparent;
-        transition: all 0.15s;
-        cursor: pointer;
-        font-size: 13px;
-      }
-
-      .file-block:hover {
-        background-color: var(--highlight-color);
-        border-left-color: var(--accent-color);
-      }
-
-      .file-icon {
-        margin-right: 8px;
-      }
-
-      .file-name {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      #editor {
-        position: absolute;
-        top: 49px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-      }
-
-      .CodeMirror {
-        height: 100%;
-        font-family: 'IBM Plex Mono', monospace;
-        font-size: 13px;
-        line-height: 1.5;
-        background-color: var(--bg-primary);
-      }
-
-      .CodeMirror-gutters {
-        background-color: var(--bg-secondary);
-        border-right: 1px solid var(--border-color);
-      }
-
-      .CodeMirror-linenumber {
-        color: var(--text-secondary);
-      }
-
-      .CodeMirror-cursor {
-        border-left: 2px solid var(--accent-color);
-      }
-
-      .resize-handle {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 4px;
-        height: 100%;
-        cursor: col-resize;
-        z-index: 10;
-        background-color: transparent;
-        transition: background-color 0.15s;
-      }
-
-      .resize-handle:hover, .resize-handle:active {
-        background-color: var(--accent-color);
-      }
-
-      #del-icon {
-        color: var(--danger-color);
-      }
-
-      #save-icon.unsaved {
-        color: var(--accent-color);
-      }
-    </style>
     <link rel="stylesheet" href="assets/highlight/codemirror.css" />
+    <link rel="stylesheet" href="assets/style.css">
   </head>
   <body>
-    <!-- Остальная часть HTML остается без изменений -->
     <div id="left-side">
       <input id="create-input" type="text" placeholder="New file..." />
       <i id="add-icon" onclick="addIconClick()" class="material-icons">add</i>
@@ -227,13 +32,12 @@
     <script src="../node_modules/codemirror/mode/sql/sql.js"></script>
     <script src="editor.js"></script>
 <script>
-  // Состояние приложения
+
   let currentFilePath = null;
   let recentFiles = [];
   let editor = initCodeMirror("editor");
   let isResizing = false;
 
-  // DOM элементы
   const leftSide = document.querySelector("#left-side");
   const rightSide = document.querySelector("#right-side");
   const resizeHandle = document.querySelector(".resize-handle");
@@ -243,9 +47,8 @@
   const addIcon = document.querySelector("#add-icon");
   const delIcon = document.querySelector("#del-icon");
 
-  // Инициализация UI
+
   const initUI = async () => {
-    // Создаем кнопку открытия файла
     const openButton = document.createElement("i");
     openButton.className = "material-icons";
     openButton.textContent = "folder_open";
@@ -254,20 +57,17 @@
     openButton.onclick = openFile;
     createInput.insertAdjacentElement("afterend", openButton);
 
-    // Загружаем состояние
     await loadAppState();
     
-    // Обработчики событий
+
     addIcon.onclick = createNewFile;
     saveIcon.onclick = saveCurrentFile;
     delIcon.onclick = deleteCurrentFile;
     editor.on("change", () => saveIcon.style.color = "var(--active-color)");
 
-    // Инициализация ресайза
     initResizeHandle();
   };
 
-  // Инициализация ресайза боковой панели
   const initResizeHandle = () => {
     const initialWidth = localStorage.getItem("sidebarWidth") 
       ? Math.max(150, Math.min(400, parseInt(localStorage.getItem("sidebarWidth"))))
@@ -285,7 +85,6 @@
     });
   };
 
-  // Обновление позиции редактора
   const updateEditorLayout = () => {
     const leftWidth = parseInt(getComputedStyle(leftSide).width);
     rightSide.style.left = `${leftWidth}px`;
@@ -296,7 +95,7 @@
     }
   };
 
-  // Обработка ресайза
+
   const handleResize = (e) => {
     if (!isResizing) return;
     
@@ -319,12 +118,11 @@
     localStorage.setItem("sidebarWidth", parseInt(leftSide.style.width));
   };
 
-  // Загрузка состояния приложения
   const loadAppState = async () => {
     try {
       const state = JSON.parse(localStorage.getItem("editorState") || "{}");
       
-      // Загружаем список последних файлов
+ 
       if (state.recentFiles) {
         recentFiles = state.recentFiles.filter(filePath => {
           try {
@@ -336,7 +134,7 @@
         updateRecentFilesList();
       }
       
-      // Восстанавливаем последний открытый файл
+   
       if (state.lastOpenedFile && await window.electronAPI.checkFileExists(state.lastOpenedFile)) {
         await loadFile(state.lastOpenedFile);
       }
@@ -345,16 +143,14 @@
     }
   };
 
-  // Сохранение состояния приложения
   const saveAppState = () => {
     const state = {
       lastOpenedFile: currentFilePath,
-      recentFiles: recentFiles.slice(0, 10) // Сохраняем только 10 последних
+      recentFiles: recentFiles.slice(0, 10) 
     };
     localStorage.setItem("editorState", JSON.stringify(state));
   };
 
-  // Обновление списка последних файлов
   const updateRecentFilesList = () => {
     const container = leftSide.querySelector(".recent-files") || document.createElement("div");
     container.className = "recent-files";
@@ -369,13 +165,13 @@
       leftSide.appendChild(container);
     }
     
-    // Добавляем обработчики клика
+    
     container.querySelectorAll(".file-block").forEach((el, i) => {
       el.onclick = () => loadFile(recentFiles[i]);
     });
   };
 
-  // Открытие файла
+
   const openFile = async () => {
     const filePath = await window.electronAPI.openFileDialog();
     if (filePath) {
@@ -383,7 +179,7 @@
     }
   };
 
-  // Загрузка файла в редактор
+
   const loadFile = async (filePath) => {
     try {
       const content = await window.electronAPI.readFile(filePath);
@@ -391,13 +187,13 @@
       currentFilePath = filePath;
       title.textContent = window.electronAPI.getFileName(filePath);
       
-      // Показываем правую панель
+      
       rightSide.style.display = "flex";
       updateEditorLayout();
       
       setEditorMode(editor, filePath);
       
-      // Обновляем список последних файлов
+    
       recentFiles = [
         filePath,
         ...recentFiles.filter(f => f !== filePath)
@@ -410,7 +206,7 @@
     }
   };
 
-  // Создание нового файла
+  
   const createNewFile = async () => {
     const fileName = createInput.value.trim();
     if (!fileName) return;
@@ -427,7 +223,7 @@
     }
   };
 
-  // Сохранение текущего файла
+
   const saveCurrentFile = async () => {
     if (!currentFilePath) {
       return await saveFileAs();
@@ -444,7 +240,7 @@
     }
   };
 
-  // Сохранение как нового файла
+ 
   const saveFileAs = async () => {
     const filePath = await window.electronAPI.saveFileDialog(currentFilePath);
     if (filePath) {
@@ -455,7 +251,7 @@
     return false;
   };
 
-  // Удаление текущего файла
+
   const deleteCurrentFile = async () => {
     if (!currentFilePath || !confirm("Удалить текущий файл?")) return;
     
@@ -472,8 +268,6 @@
       console.error("Ошибка удаления файла:", error);
     }
   };
-
-  // Инициализация при загрузке
   window.addEventListener("load", initUI);
   window.addEventListener("beforeunload", saveAppState);
 </script>

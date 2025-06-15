@@ -20,7 +20,6 @@ function createWindow() {
   mainWindow.setTitle('Текстовый редактор');
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
-  // Обработчики IPC
   ipcMain.handle('open-file-dialog', async () => {
     const result = await dialog.showOpenDialog(mainWindow, {
       properties: ['openFile'],
@@ -54,7 +53,7 @@ function createWindow() {
   ipcMain.handle('delete-file', (_, filePath) => {
     fs.unlinkSync(filePath);
   });
-  // Добавить в main.js после других ipcMain.handle
+
 ipcMain.handle('check-file-exists', (_, filePath) => {
   try {
     fs.accessSync(filePath);
